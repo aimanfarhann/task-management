@@ -16,4 +16,21 @@ public final class UserMapper {
   public static UserDto toDto(User user) {
     return new UserDto(user.getId(), user.getEmail(), user.getDisplayName(), user.getRole());
   }
+
+  /**
+   * Maps a user entity to its admin API representation, including the active flag and creation
+   * time. Never exposes the password hash.
+   *
+   * @param user the persisted user entity
+   * @return the admin contract-shaped DTO
+   */
+  public static AdminUserDto toAdminDto(User user) {
+    return new AdminUserDto(
+        user.getId(),
+        user.getEmail(),
+        user.getDisplayName(),
+        user.getRole(),
+        user.isActive(),
+        user.getCreatedAt());
+  }
 }

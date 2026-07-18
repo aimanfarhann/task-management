@@ -144,7 +144,12 @@
       }
 
       <div class="members__table-wrapper">
-        <table mat-table [dataSource]="projectStore.members()" class="members__table">
+        <table
+          mat-table
+          [dataSource]="projectStore.members()"
+          class="members__table"
+          aria-label="Project members"
+        >
           <ng-container matColumnDef="displayName">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let member">{{ member.displayName }}</td>

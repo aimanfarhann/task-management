@@ -1,7 +1,36 @@
 .shell {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+// Keyboard skip link (DESIGN §8): off-screen until focused, then anchors to
+// the top-left and moves focus to the main content region.
+.shell__skip-link {
+  position: absolute;
+  left: 8px;
+  top: -64px;
+  z-index: 10;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font: var(--mat-sys-label-large);
+  text-decoration: none;
+  transition: top 100ms ease;
+}
+
+.shell__skip-link:focus-visible {
+  top: 8px;
+  outline: 2px solid var(--mat-sys-on-primary);
+  outline-offset: 2px;
+}
+
+// The main region is a programmatic focus target for the skip link; it should
+// never show a focus ring when focused this way (not a keyboard-tabbed stop).
+.shell__content:focus {
+  outline: none;
 }
 
 .shell__toolbar {

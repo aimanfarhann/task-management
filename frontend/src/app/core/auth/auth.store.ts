@@ -110,9 +110,18 @@ export class AuthStore {
     return this.refreshInFlight;
   }
 
-  private handleRefreshFailure(): void {
+  /**
+   * Ends the session immediately and routes to /login. Used when the backend reports the session is
+   * no longer usable — a failed refresh, or a 403 {@code ACCOUNT_INACTIVE} after the account was
+   * deactivated mid-session — so the user is signed out cleanly rather than stuck on error pages.
+   */
+  terminateSession(): void {
     this.clearSession();
     void this.router.navigate(['/login']);
+  }
+
+  private handleRefreshFailure(): void {
+    this.terminateSession();
   }
 
   private applySession(response: AuthResponse): void {

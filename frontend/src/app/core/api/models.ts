@@ -1,3 +1,5 @@
+import { Role } from '../auth/models';
+
 /** The 8 preset project color tag keys (API contract / DESIGN.md §2). */
 export const COLOR_TAGS = [
   'red',
@@ -150,6 +152,21 @@ export interface TaskFilters {
 /** Request body for POST /projects/{id}/tasks/{taskId}/comments. */
 export interface CreateCommentRequest {
   body: string;
+}
+
+/** AdminUserDto from the M3 admin API contract. */
+export interface AdminUserDto {
+  id: number;
+  email: string;
+  displayName: string;
+  role: Role;
+  active: boolean;
+  createdAt: string;
+}
+
+/** Request body for PATCH /admin/users/{userId}/active. */
+export interface SetUserActiveRequest {
+  active: boolean;
 }
 
 /** One field-level validation error inside an API error body. */

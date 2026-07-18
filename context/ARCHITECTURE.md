@@ -8,7 +8,7 @@ Top-level architecture, system design, data flow, and folder structure. This doc
 
 ```mermaid
 flowchart LR
-    Browser["Angular SPA\n(Angular 20 + Material)"]
+    Browser["Angular SPA\n(Angular 22 + Material)"]
     API["Spring Boot 3 REST API\n(Java 21, stateless)"]
     DB[("PostgreSQL 16")]
 

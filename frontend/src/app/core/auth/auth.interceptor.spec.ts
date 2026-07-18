@@ -158,6 +158,27 @@ describe('authInterceptor', () => {
     httpMock.expectNone('/api/v1/auth/refresh');
   });
 
+  it('response403_accountInactive_terminatesSessionAndSignsOut', () => {
+    // A user deactivated mid-session gets 403 ACCOUNT_INACTIVE; the interceptor must sign them out
+    // (clear session + route /login) rather than leave them stuck, and must not attempt a refresh.
+    seedStoredSession();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    let error: unknown;
+
+    http.get('/api/v1/projects').subscribe({ error: (requestError) => (error = requestError) });
+    httpMock
+      .expectOne('/api/v1/projects')
+      .flush(
+        { code: 'ACCOUNT_INACTIVE', message: 'This account has been deactivated', fieldErrors: [] },
+        { status: 403, statusText: 'Forbidden' },
+      );
+
+    expect(error).toBeInstanceOf(HttpErrorResponse);
+    expect(TestBed.inject(AuthStore).isAuthenticated()).toBe(false);
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    httpMock.expectNone('/api/v1/auth/refresh');
+  });
+
   it('response403_passesThroughWithoutRefresh', () => {
     seedStoredSession();
     let error: unknown;

@@ -15,3 +15,14 @@ export const guestGuard: CanActivateFn = () => {
   const router = inject(Router);
   return authStore.isAuthenticated() ? router.createUrlTree(['/projects']) : true;
 };
+
+/**
+ * Restricts admin-only routes to ADMIN users; sends an authenticated non-admin
+ * to /dashboard. Runs after authGuard, so an unauthenticated caller is already
+ * redirected to /login before this check applies.
+ */
+export const adminGuard: CanActivateFn = () => {
+  const authStore = inject(AuthStore);
+  const router = inject(Router);
+  return authStore.currentUser()?.role === 'ADMIN' ? true : router.createUrlTree(['/dashboard']);
+};

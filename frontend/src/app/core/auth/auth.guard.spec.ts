@@ -8,8 +8,8 @@ import {
   UrlTree,
   provideRouter,
 } from '@angular/router';
-import { seedStoredSession } from '../../testing/fixtures';
-import { authGuard, guestGuard } from './auth.guard';
+import { buildAuthResponse, seedStoredSession } from '../../testing/fixtures';
+import { adminGuard, authGuard, guestGuard } from './auth.guard';
 
 describe('auth guards', () => {
   beforeEach(() => {
@@ -53,5 +53,27 @@ describe('auth guards', () => {
 
     expect(result).toBeInstanceOf(UrlTree);
     expect(String(result)).toBe('/projects');
+  });
+
+  it('adminGuard_adminUser_allowsActivation', () => {
+    seedStoredSession({ user: { ...buildAuthResponse().user, role: 'ADMIN' } });
+
+    expect(runGuard(adminGuard)).toBe(true);
+  });
+
+  it('adminGuard_nonAdminUser_redirectsToDashboard', () => {
+    seedStoredSession();
+
+    const result = runGuard(adminGuard);
+
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(String(result)).toBe('/dashboard');
+  });
+
+  it('adminGuard_unauthenticated_redirectsToDashboard', () => {
+    const result = runGuard(adminGuard);
+
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(String(result)).toBe('/dashboard');
   });
 });

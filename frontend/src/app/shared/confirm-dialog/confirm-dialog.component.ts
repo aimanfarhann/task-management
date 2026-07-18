@@ -19,7 +19,7 @@ export interface ConfirmDialogData {
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
-      <p class="confirm-dialog__message">{{ data.message }}</p>
+      <p id="tf-confirm-message" class="confirm-dialog__message">{{ data.message }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" [mat-dialog-close]="false">Cancel</button>

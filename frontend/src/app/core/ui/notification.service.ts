@@ -13,10 +13,12 @@ export class NotificationService {
   private readonly snackBar = inject(MatSnackBar);
 
   success(message: string): void {
-    this.snackBar.open(message, undefined, { duration: 3000 });
+    // Non-interrupting live-region announcement (role=status) for success (DESIGN §8).
+    this.snackBar.open(message, undefined, { duration: 3000, politeness: 'polite' });
   }
 
   error(message: string): void {
-    this.snackBar.open(message, 'Dismiss', { duration: 5000 });
+    // Interrupting live-region announcement (role=alert) so failures are heard (DESIGN §8).
+    this.snackBar.open(message, 'Dismiss', { duration: 5000, politeness: 'assertive' });
   }
 }

@@ -1,5 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 import {
+  AdminUserDto,
   CommentDto,
   DashboardDto,
   DashboardTaskDto,
@@ -119,6 +120,18 @@ export function buildProjectSummary(overrides: Partial<ProjectSummaryDto> = {}):
     todoCount: 2,
     inProgressCount: 1,
     doneCount: 3,
+    ...overrides,
+  };
+}
+
+export function buildAdminUser(overrides: Partial<AdminUserDto> = {}): AdminUserDto {
+  return {
+    id: 1,
+    email: 'ada@example.com',
+    displayName: 'Ada Lovelace',
+    role: 'USER',
+    active: true,
+    createdAt: '2026-07-01T10:00:00Z',
     ...overrides,
   };
 }

@@ -1,4 +1,5 @@
 <div class="shell">
+  <a class="shell__skip-link" href="#main-content">Skip to content</a>
   <mat-toolbar class="shell__toolbar">
     <a routerLink="/dashboard" class="shell__wordmark">TaskFlow</a>
     <span class="shell__spacer"></span>
@@ -46,8 +47,19 @@
         <mat-icon aria-hidden="true">folder</mat-icon>
         <span class="shell__nav-label">Projects</span>
       </a>
+      @if (authStore.currentUser()?.role === 'ADMIN') {
+        <a
+          class="shell__nav-link"
+          routerLink="/admin/users"
+          routerLinkActive="shell__nav-link--active"
+          ariaCurrentWhenActive="page"
+        >
+          <mat-icon aria-hidden="true">admin_panel_settings</mat-icon>
+          <span class="shell__nav-label">Admin</span>
+        </a>
+      }
     </nav>
-    <main class="shell__content">
+    <main id="main-content" class="shell__content" tabindex="-1">
       <router-outlet />
     </main>
   </div>

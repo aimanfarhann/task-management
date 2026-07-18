@@ -1,0 +1,64 @@
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header__title {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+}
+
+.admin-users__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-users__error {
+  margin: 0 0 16px;
+  color: var(--mat-sys-error);
+  font: var(--mat-sys-body-medium);
+}
+
+.admin-users__table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+}
+
+.admin-users__table {
+  width: 100%;
+}
+
+// ADMIN chips use the secondary-container role so the elevated role reads at a
+// glance; the text label carries the meaning regardless of color (DESIGN §8).
+.admin-users__role--admin {
+  --mdc-chip-elevated-container-color: var(--mat-sys-secondary-container);
+  --mdc-chip-label-text-color: var(--mat-sys-on-secondary-container);
+}
+
+.admin-users__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: var(--mat-sys-label-large);
+}
+
+// Status is conveyed by icon + text label; color is only a supplement (DESIGN §8).
+.admin-users__status--active {
+  color: var(--tf-status-done);
+}
+
+.admin-users__status--inactive {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.admin-users__self-note {
+  // Visible, screen-reader-reachable text replacing a disabled self-action button (DESIGN §8/§9).
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.admin-users__action {
+  // Comfortable 44px touch target (DESIGN §8).
+  min-height: 44px;
+}

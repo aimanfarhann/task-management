@@ -15,6 +15,15 @@ function matchesAny(url: string, paths: string[]): boolean {
   return paths.some((path) => url.includes(path));
 }
 
+function isAccountInactive(error: HttpErrorResponse): boolean {
+  const body: unknown = error.error;
+  return (
+    typeof body === 'object' &&
+    body !== null &&
+    (body as { code?: unknown }).code === 'ACCOUNT_INACTIVE'
+  );
+}
+
 function withBearer(request: HttpRequest<unknown>, accessToken: string): HttpRequest<unknown> {
   return request.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } });
 }
@@ -35,6 +44,12 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(outgoingRequest).pipe(
     catchError((error: unknown) => {
+      if (error instanceof HttpErrorResponse && error.status === 403 && isAccountInactive(error)) {
+        // The account was deactivated mid-session; the token is still unexpired so no refresh would
+        // help. Sign out cleanly instead of leaving the user stuck on error pages.
+        authStore.terminateSession();
+        return throwError(() => error);
+      }
       const isUnauthorized = error instanceof HttpErrorResponse && error.status === 401;
       if (!isUnauthorized || skipRefresh) {
         return throwError(() => error);

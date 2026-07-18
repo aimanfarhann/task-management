@@ -57,6 +57,16 @@ public class User {
     this.createdAt = Instant.now();
   }
 
+  /** Reactivates the account, restoring access on the next authenticated request. */
+  public void activate() {
+    this.active = true;
+  }
+
+  /** Deactivates the account; the JWT filter rejects it on the next request (SCHEMA.md §4). */
+  public void deactivate() {
+    this.active = false;
+  }
+
   /** Returns the database id, or null if not yet persisted. */
   public Long getId() {
     return id;

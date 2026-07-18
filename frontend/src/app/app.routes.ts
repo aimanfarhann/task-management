@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/auth/auth.guard';
+import { adminGuard, authGuard, guestGuard } from './core/auth/auth.guard';
 import { ShellComponent } from './core/layout/shell.component';
 
 export const routes: Routes = [
@@ -25,6 +25,14 @@ export const routes: Routes = [
         path: 'projects',
         loadChildren: () =>
           import('./features/projects/projects.routes').then((m) => m.PROJECTS_ROUTES),
+      },
+      {
+        path: 'admin/users',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/admin/admin-users-page.component').then(
+            (m) => m.AdminUsersPageComponent,
+          ),
       },
     ],
   },
