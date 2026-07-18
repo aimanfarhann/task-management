@@ -34,9 +34,17 @@ export interface ConfirmDialogData {
     </mat-dialog-actions>
   `,
   styles: `
+    .mat-mdc-dialog-title {
+      /* Title in the display voice (DESIGN.md §3). */
+      font-family: var(--tf-font-display);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
     .confirm-dialog__message {
       margin: 0;
       max-width: 72ch;
+      color: var(--mat-sys-on-surface-variant);
       font: var(--mat-sys-body-medium);
     }
 

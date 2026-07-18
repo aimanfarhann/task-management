@@ -27,25 +27,39 @@ const PRIORITY_ICONS: Record<string, string> = {
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      padding: 3px 9px 3px 6px;
+      border-radius: var(--mat-sys-corner-small);
+      border: 1px solid transparent;
       font: var(--mat-sys-label-medium);
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      white-space: nowrap;
     }
 
     .priority-badge__icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
     }
 
+    /* Tonal fill + same-hue hairline: the badge reads by color and shape at a
+       glance on the board; text keeps its AA-tuned --tf-priority-* color. */
     .priority-badge--high {
       color: var(--tf-priority-high);
+      background-color: color-mix(in srgb, var(--tf-priority-high) 14%, transparent);
+      border-color: color-mix(in srgb, var(--tf-priority-high) 30%, transparent);
     }
 
     .priority-badge--medium {
       color: var(--tf-priority-medium);
+      background-color: color-mix(in srgb, var(--tf-priority-medium) 14%, transparent);
+      border-color: color-mix(in srgb, var(--tf-priority-medium) 30%, transparent);
     }
 
     .priority-badge--low {
       color: var(--tf-priority-low);
+      background-color: color-mix(in srgb, var(--tf-priority-low) 13%, transparent);
+      border-color: color-mix(in srgb, var(--tf-priority-low) 28%, transparent);
     }
   `,
 })

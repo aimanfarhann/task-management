@@ -1,38 +1,14 @@
-// TaskFlow global theme (DESIGN.md §2–§6).
+// TaskFlow global theme — "Focus": a refined dark workspace (DESIGN.md).
 //
-// Third-party style dependencies (RULES.md §27), bundled via the angular.json
-// "styles" array so nothing is fetched from a CDN:
-// - @fontsource/roboto: self-hosts the Roboto font (DESIGN.md §3).
-// - material-icons: self-hosts the Material Icons ligature font that
-//   Angular Material's <mat-icon> uses by default.
+// Self-hosted fonts, bundled via the angular.json "styles" array (RULES §27, no CDN):
+//   Inter Variable (body / UI), Space Grotesk Variable (display),
+//   JetBrains Mono Variable (metadata: ids, dates, counts), material-icons (mat-icon).
 @use '@angular/material' as mat;
 @use './theme/theme-colors' as palettes;
 
-// Material 3 theme generated from the seed color #4355B9 (DESIGN.md §2).
-// The palettes in src/theme/_theme-colors.scss come from
-// `ng generate @angular/material:theme-color --primary-color=#4355B9`.
-// `use-system-variables` makes every component token resolve through the
-// `--mat-sys-*` custom properties emitted below, so the dark scheme only has
-// to re-emit the color variables.
-$light-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: palettes.$primary-palette,
-      tertiary: palettes.$tertiary-palette,
-      use-system-variables: true,
-    ),
-    typography: (
-      plain-family: Roboto,
-      brand-family: Roboto,
-      use-system-variables: true,
-    ),
-    density: (
-      scale: 0,
-    ),
-  )
-);
-
+// Material 3 machinery. We keep the token system + component themes, then override the
+// --mat-sys-* color/font/shape tokens below with the Focus values, so every component
+// re-skins at once. Focus is DARK-FIRST: `html` is dark; `html.tf-light` opts into light.
 $dark-theme: mat.define-theme(
   (
     color: (
@@ -41,17 +17,184 @@ $dark-theme: mat.define-theme(
       tertiary: palettes.$tertiary-palette,
       use-system-variables: true,
     ),
+    typography: (
+      plain-family: 'Inter Variable',
+      brand-family: 'Space Grotesk Variable',
+      use-system-variables: true,
+    ),
+    density: (
+      scale: 0,
+    ),
   )
 );
 
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: palettes.$primary-palette,
+      tertiary: palettes.$tertiary-palette,
+      use-system-variables: true,
+    ),
+  )
+);
+
+:root {
+  --tf-font-display: 'Space Grotesk Variable', 'Inter Variable', system-ui, sans-serif;
+  --tf-font-body: 'Inter Variable', system-ui, sans-serif;
+  --tf-font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', monospace;
+}
+
+// ===========================================================================
+// Dark — the default, and the hero the direction is designed around.
+// ===========================================================================
 html {
   height: 100%;
-  color-scheme: light;
+  color-scheme: dark;
 
-  // Semantic status/priority colors (DESIGN.md §2) — defined once here with
-  // dark variants below; components consume only these custom properties.
-  // Light values are the darker 700-level shades so the label text they color
-  // clears WCAG AA (>=4.5:1) on card surfaces (surface-container-low), per §8.
+  @include mat.system-level-colors($dark-theme);
+  @include mat.system-level-typography($dark-theme);
+  @include mat.system-level-elevation($dark-theme);
+  @include mat.system-level-shape();
+  @include mat.system-level-state();
+  @include mat.all-component-themes($dark-theme);
+
+  // --- Fonts: point Material's brand/plain families at our variable fonts. ---
+  --mat-sys-brand-font-family: var(--tf-font-display);
+  --mat-sys-plain-font-family: var(--tf-font-body);
+
+  // --- Surfaces: deep, desaturated blue-slate, layered by tone. Never black. ---
+  --mat-sys-surface: #0e1014;
+  --mat-sys-background: #0e1014;
+  --mat-sys-surface-dim: #0b0d11;
+  --mat-sys-surface-bright: #262b36;
+  --mat-sys-surface-container-lowest: #0a0c10;
+  --mat-sys-surface-container-low: #14161d;
+  --mat-sys-surface-container: #171a22;
+  --mat-sys-surface-container-high: #1d2029;
+  --mat-sys-surface-container-highest: #232733;
+  --mat-sys-surface-variant: #2a2f3a;
+  --mat-sys-on-surface: #e7e9ee;
+  --mat-sys-on-surface-variant: #9aa2b1;
+  --mat-sys-outline: #3a3f4c;
+  --mat-sys-outline-variant: #24272f; // hairline
+  --mat-sys-inverse-surface: #e7e9ee;
+  --mat-sys-inverse-on-surface: #14161d;
+  --mat-sys-shadow: #000000;
+  --mat-sys-scrim: #000000;
+
+  // --- Accent: a single cool iris (deliberately not an acid green/vermilion). ---
+  --mat-sys-primary: #8b93ff;
+  --mat-sys-on-primary: #0b0d16;
+  --mat-sys-primary-container: #232748;
+  --mat-sys-on-primary-container: #c9cdff;
+  --mat-sys-inverse-primary: #4a52c7;
+  --mat-sys-surface-tint: #8b93ff;
+
+  // Neutral secondary/tertiary keep the accent singular.
+  --mat-sys-secondary: #aab1c2;
+  --mat-sys-on-secondary: #161922;
+  --mat-sys-secondary-container: #232733;
+  --mat-sys-on-secondary-container: #d9dde6;
+  --mat-sys-tertiary: #8b93ff;
+  --mat-sys-on-tertiary: #0b0d16;
+  --mat-sys-tertiary-container: #232748;
+  --mat-sys-on-tertiary-container: #c9cdff;
+
+  // Error (rose).
+  --mat-sys-error: #ff6b74;
+  --mat-sys-on-error: #2a0710;
+  --mat-sys-error-container: #3a151c;
+  --mat-sys-on-error-container: #ffb3b8;
+
+  // --- Shape: a tighter, refined corner scale (tools, not toys). ---
+  --mat-sys-corner-extra-small: 4px;
+  --mat-sys-corner-small: 6px;
+  --mat-sys-corner-medium: 8px;
+  --mat-sys-corner-large: 12px;
+  --mat-sys-corner-extra-large: 16px;
+  // Buttons default to pill (corner-full); make them refined rectangles instead.
+  --mdc-text-button-container-shape: var(--mat-sys-corner-small);
+  --mdc-filled-button-container-shape: var(--mat-sys-corner-small);
+  --mdc-outlined-button-container-shape: var(--mat-sys-corner-small);
+  --mdc-protected-button-container-shape: var(--mat-sys-corner-small);
+
+  // --- Semantic status/priority — tuned for AA text on the dark surfaces. ---
+  // Neutral todo/low nudged one step lighter (#a2aab8) for AA headroom on the
+  // brightest hovered row surface (surface-container-high).
+  --tf-status-todo: #a2aab8;
+  --tf-status-in-progress: #6aa5ff;
+  --tf-status-done: #37d39e;
+  --tf-priority-high: #ff7a86;
+  --tf-priority-medium: #f6b23d;
+  --tf-priority-low: #a2aab8;
+
+  // 8 project tag hues (bright enough to read on dark).
+  --tf-tag-red: #ff7a86;
+  --tf-tag-orange: #ff9d5c;
+  --tf-tag-amber: #f6b23d;
+  --tf-tag-green: #37d39e;
+  --tf-tag-teal: #2dd4c4;
+  --tf-tag-blue: #6aa5ff;
+  --tf-tag-indigo: #8b93ff;
+  --tf-tag-purple: #c48cff;
+
+  // Focus helpers used across components.
+  --tf-hairline: var(--mat-sys-outline-variant);
+  --tf-ring: rgba(139, 147, 255, 0.55);
+  --tf-accent-soft: rgba(139, 147, 255, 0.12);
+  --tf-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --tf-shadow-2: 0 8px 28px rgba(0, 0, 0, 0.45);
+  // Ambient iris glow, top-center, extremely restrained (atmosphere, not decoration).
+  --tf-ambient: radial-gradient(120% 60% at 50% -10%, rgba(139, 147, 255, 0.08), transparent 60%);
+}
+
+// ===========================================================================
+// Light — a considered opt-in (ThemeStore adds .tf-light).
+// ===========================================================================
+html.tf-light {
+  color-scheme: light;
+  @include mat.system-level-colors($light-theme);
+
+  --mat-sys-surface: #f6f7f9;
+  --mat-sys-background: #f6f7f9;
+  --mat-sys-surface-dim: #e6e8ef;
+  --mat-sys-surface-bright: #ffffff;
+  --mat-sys-surface-container-lowest: #ffffff;
+  --mat-sys-surface-container-low: #f1f2f6;
+  --mat-sys-surface-container: #eceef3;
+  --mat-sys-surface-container-high: #e6e8ef;
+  --mat-sys-surface-container-highest: #e0e3ec;
+  --mat-sys-surface-variant: #e2e5ec;
+  --mat-sys-on-surface: #14161d;
+  --mat-sys-on-surface-variant: #545b6a;
+  --mat-sys-outline: #c4c8d2;
+  --mat-sys-outline-variant: #e0e3ea;
+  --mat-sys-inverse-surface: #14161d;
+  --mat-sys-inverse-on-surface: #f1f2f6;
+
+  --mat-sys-primary: #4b53d9;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #e2e3ff;
+  --mat-sys-on-primary-container: #191a5e;
+  --mat-sys-inverse-primary: #bfc2ff;
+  --mat-sys-surface-tint: #4b53d9;
+
+  --mat-sys-secondary: #545b6a;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #e6e8ef;
+  --mat-sys-on-secondary-container: #262b36;
+  --mat-sys-tertiary: #4b53d9;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #e2e3ff;
+  --mat-sys-on-tertiary-container: #191a5e;
+
+  --mat-sys-error: #ba1a1a;
+  --mat-sys-on-error: #ffffff;
+  --mat-sys-error-container: #ffdad6;
+  --mat-sys-on-error-container: #410002;
+
+  // Light semantic shades keep AA on light card surfaces.
   --tf-status-todo: #4b5563;
   --tf-status-in-progress: #1d4ed8;
   --tf-status-done: #15803d;
@@ -59,7 +202,6 @@ html {
   --tf-priority-medium: #b45309;
   --tf-priority-low: #4b5563;
 
-  // The 8 preset project colorTag hues (API contract keys, DESIGN.md §2).
   --tf-tag-red: #b91c1c;
   --tf-tag-orange: #c2410c;
   --tf-tag-amber: #b45309;
@@ -69,98 +211,159 @@ html {
   --tf-tag-indigo: #4338ca;
   --tf-tag-purple: #7e22ce;
 
-  @include mat.system-level-colors($light-theme);
-  @include mat.system-level-typography($light-theme);
-  @include mat.system-level-elevation($light-theme);
-  @include mat.system-level-shape();
-  @include mat.system-level-state();
-  @include mat.all-component-themes($light-theme);
-}
-
-// Manual dark mode: ThemeStore toggles .tf-dark on <html>; the default follows
-// prefers-color-scheme and an explicit choice is persisted in localStorage.
-html.tf-dark {
-  color-scheme: dark;
-
-  --tf-status-todo: #9ca3af;
-  --tf-status-in-progress: #60a5fa;
-  --tf-status-done: #4ade80;
-  --tf-priority-high: #f87171;
-  --tf-priority-medium: #fbbf24;
-  --tf-priority-low: #9ca3af;
-
-  --tf-tag-red: #f87171;
-  --tf-tag-orange: #fb923c;
-  --tf-tag-amber: #fbbf24;
-  --tf-tag-green: #4ade80;
-  --tf-tag-teal: #2dd4bf;
-  --tf-tag-blue: #60a5fa;
-  --tf-tag-indigo: #818cf8;
-  --tf-tag-purple: #c084fc;
-
-  @include mat.system-level-colors($dark-theme);
+  --tf-ring: rgba(75, 83, 217, 0.4);
+  --tf-accent-soft: rgba(75, 83, 217, 0.08);
+  --tf-shadow-1: 0 1px 2px rgba(20, 22, 29, 0.08);
+  --tf-shadow-2: 0 8px 28px rgba(20, 22, 29, 0.12);
+  --tf-ambient: radial-gradient(120% 60% at 50% -10%, rgba(75, 83, 217, 0.05), transparent 60%);
 }
 
 body {
   margin: 0;
-  height: 100%;
+  min-height: 100%;
   background-color: var(--mat-sys-surface);
+  background-image: var(--tf-ambient);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: var(--mat-sys-on-surface);
+  font-family: var(--tf-font-body);
   font: var(--mat-sys-body-medium);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-// Page container: max 1200px centered, 24px side padding, 16px under 600px
-// (DESIGN.md §4). Content fades in over 200ms (route transition, DESIGN.md §6).
+// --- Typographic roles -------------------------------------------------------
+
+// Display type: Space Grotesk, tightened. Reserved for wordmarks and page titles.
+.tf-display {
+  font-family: var(--tf-font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+// Metadata voice: mono for ids, dates, counts, keyboard hints — the "tool" signal.
+.tf-mono {
+  font-family: var(--tf-font-mono);
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+}
+
+// Small uppercase eyebrow/section label.
+.tf-eyebrow {
+  font-family: var(--tf-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// --- Layout ------------------------------------------------------------------
+
+// Page container: max 1200px, centered, 24/16px padding (DESIGN §4).
 .tf-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
-  animation: tf-page-enter 200ms ease-out;
+  animation: tf-page-enter 220ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 @keyframes tf-page-enter {
   from {
     opacity: 0;
+    transform: translateY(6px);
   }
 
   to {
     opacity: 1;
+    transform: none;
   }
 }
 
-// Small non-interactive badge (e.g. "Archived") pairing icon + text so color
-// is never the only signal (DESIGN.md §8).
+// Reusable Focus surface: layered container + hairline border + refined radius.
+.tf-surface {
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-large);
+}
+
+// --- Shared component polish -------------------------------------------------
+
+// Non-interactive badge (e.g. "Archived"): icon + text so color is never the
+// only signal (DESIGN §8). Hairline pill.
 .tf-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background-color: var(--mat-sys-surface-variant);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--tf-hairline);
+  background-color: var(--mat-sys-surface-container-high);
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-label-medium);
 
   mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
   }
 }
 
-// Compact icon size for icon+text metadata rows.
 mat-icon.tf-icon-sm {
   font-size: 18px;
   width: 18px;
   height: 18px;
 }
 
-// DESIGN.md §6: under prefers-reduced-motion replace movement with
-// (near-instant) opacity-only transitions.
+// Material cards read as Focus surfaces (hairline + tonal fill, quiet shadow).
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--tf-hairline);
+  box-shadow: var(--tf-shadow-1) !important;
+}
+
+// Menus / dialogs sit on a lifted surface with a hairline edge.
+.mat-mdc-menu-panel,
+.mat-mdc-dialog-surface {
+  border: 1px solid var(--tf-hairline);
+}
+
+// Consistent iris focus ring on custom interactive elements.
+:where(a, button):focus-visible {
+  outline: 2px solid var(--tf-ring);
+  outline-offset: 2px;
+}
+
+// Refined, unobtrusive scrollbars for the dark canvas.
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-surface-bright) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--mat-sys-surface-bright);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--mat-sys-outline);
+}
+
+// --- Motion ------------------------------------------------------------------
+// Under prefers-reduced-motion, replace movement with near-instant opacity.
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

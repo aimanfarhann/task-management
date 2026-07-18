@@ -6,10 +6,10 @@ export type ThemePreference = 'light' | 'dark';
 const THEME_STORAGE_KEY = 'taskflow.theme';
 
 /**
- * Signal store for the color scheme (DESIGN.md §2): defaults to
- * prefers-color-scheme, manual toggle persisted in localStorage. The active
- * scheme is applied as the .tf-dark class on <html>, which drives the dark
- * Material color tokens in styles.scss.
+ * Signal store for the color scheme (DESIGN.md §2). The "Focus" direction is
+ * dark-first, so dark is the default; an explicit choice is persisted in
+ * localStorage. The light scheme is applied as the .tf-light class on <html>,
+ * which re-emits the light Material color tokens in styles.scss.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeStore {
@@ -24,8 +24,6 @@ export class ThemeStore {
   toggleTheme(): void {
     const nextTheme: ThemePreference = this.theme() === 'dark' ? 'light' : 'dark';
     this.theme.set(nextTheme);
-    // Persist only explicit choices so the system preference keeps applying
-    // until the user actually toggles.
     localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
     this.applyTheme(nextTheme);
   }
@@ -35,18 +33,12 @@ export class ThemeStore {
     if (stored === 'light' || stored === 'dark') {
       return stored;
     }
-    return this.prefersDark() ? 'dark' : 'light';
-  }
-
-  private prefersDark(): boolean {
-    const window = this.document.defaultView;
-    return (
-      typeof window?.matchMedia === 'function' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    );
+    // Dark-first: default to dark unless the user has explicitly chosen light.
+    return 'dark';
   }
 
   private applyTheme(theme: ThemePreference): void {
-    this.document.documentElement.classList.toggle('tf-dark', theme === 'dark');
+    // Base scheme is dark; .tf-light opts into the light scheme.
+    this.document.documentElement.classList.toggle('tf-light', theme === 'light');
   }
 }

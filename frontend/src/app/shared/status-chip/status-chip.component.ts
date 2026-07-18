@@ -34,26 +34,40 @@ const UNKNOWN_STATUS: StatusMeta = { label: 'Unknown', icon: 'help', modifier: '
     .status-chip {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
+      padding: 3px 10px 3px 7px;
+      border-radius: var(--mat-sys-corner-small);
+      border: 1px solid transparent;
       font: var(--mat-sys-label-medium);
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      white-space: nowrap;
     }
 
     .status-chip__icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
     }
 
+    /* Tonal fill + same-hue hairline so each status reads by color AND shape,
+       while the label text keeps its AA-tuned --tf-status-* color. */
     .status-chip--todo {
       color: var(--tf-status-todo);
+      background-color: color-mix(in srgb, var(--tf-status-todo) 13%, transparent);
+      border-color: color-mix(in srgb, var(--tf-status-todo) 28%, transparent);
     }
 
     .status-chip--in-progress {
       color: var(--tf-status-in-progress);
+      background-color: color-mix(in srgb, var(--tf-status-in-progress) 13%, transparent);
+      border-color: color-mix(in srgb, var(--tf-status-in-progress) 28%, transparent);
     }
 
     .status-chip--done {
       color: var(--tf-status-done);
+      background-color: color-mix(in srgb, var(--tf-status-done) 13%, transparent);
+      border-color: color-mix(in srgb, var(--tf-status-done) 28%, transparent);
     }
   `,
 })

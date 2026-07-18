@@ -1,11 +1,28 @@
+// The board's hero object: a hairline Focus surface with tonal depth (DESIGN §5).
+// Grab affordance + a quiet lift on hover signal it is draggable.
 .task-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  border-radius: 12px;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface-container-low);
-  border: 1px solid var(--mat-sys-outline-variant);
+  border: 1px solid var(--tf-hairline);
+  box-shadow: var(--tf-shadow-1);
+  cursor: grab;
+  transition:
+    background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.task-card:hover {
+  background-color: var(--mat-sys-surface-container);
+  border-color: var(--mat-sys-outline);
+}
+
+// While the pointer is actively dragging the card.
+.task-card:active {
+  cursor: grabbing;
 }
 
 .task-card__top {
@@ -25,17 +42,25 @@
   cursor: pointer;
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-title-medium);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: color 120ms ease;
+}
+
+.task-card__title:hover {
+  color: var(--mat-sys-primary);
 }
 
 .task-card__title:focus-visible {
-  outline: 2px solid var(--mat-sys-primary);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid var(--tf-ring);
+  outline-offset: 3px;
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
 .task-card__menu-button {
   flex-shrink: 0;
-  margin: -8px -8px 0 0;
+  margin: -6px -8px 0 0;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .task-card__meta {
@@ -51,18 +76,47 @@
   align-items: center;
   gap: 4px;
   color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-small);
+  font-size: 11px;
+  font-weight: 500;
 }
 
+// Overdue: never color alone — an urgent icon, heavier weight and a hidden
+// "(overdue)" label back up the rose tone (DESIGN §8).
 .task-card__due--overdue {
   color: var(--tf-priority-high);
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.task-card__due--overdue mat-icon {
+  color: var(--tf-priority-high);
 }
 
 .task-card__assignee {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-small);
+}
+
+.task-card__assignee mat-icon {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+// Drop target: while this card is the CDK placeholder, ghost its content and
+// show a dashed iris slot so the landing position is obvious (DESIGN §6/§8).
+// The class lands on the tf-task-card host, so :host reaches it in-scope.
+:host(.cdk-drag-placeholder) .task-card {
+  background-color: var(--tf-accent-soft);
+  border: 1px dashed color-mix(in srgb, var(--mat-sys-primary) 55%, transparent);
+  box-shadow: none;
+}
+
+:host(.cdk-drag-placeholder) .task-card > * {
+  visibility: hidden;
+}
+
+// The card follows the cursor while grabbed.
+:host(.cdk-drag-dragging) .task-card {
+  cursor: grabbing;
 }

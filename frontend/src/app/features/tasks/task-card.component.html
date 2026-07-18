@@ -38,7 +38,7 @@
     <tf-priority-badge [priority]="task().priority" />
     @if (task().dueDate; as dueDate) {
       <span
-        class="task-card__due"
+        class="task-card__due tf-mono"
         [class.task-card__due--overdue]="overdue()"
         [matTooltip]="overdue() ? 'Overdue' : ''"
       >

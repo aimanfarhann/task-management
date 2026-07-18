@@ -1,5 +1,5 @@
 .board {
-  // DESIGN.md §4: fixed-width columns, horizontal scroll on overflow.
+  // DESIGN §4: fixed-width columns, horizontal scroll on overflow.
   display: flex;
   gap: 16px;
   overflow-x: auto;
@@ -7,60 +7,83 @@
   align-items: flex-start;
 }
 
+// Each column is a quiet hairline surface; a subtle tonal fill separates the
+// lane from the canvas without heavy shadow (DESIGN §5).
 .board-column {
   flex: 0 0 320px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 12px;
-  background-color: var(--mat-sys-surface-container);
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--tf-hairline);
 }
 
+// Hairline-underlined header carrying the status chip + a mono task count.
 .board-column__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px;
+  gap: 8px;
+  padding: 6px 6px 10px;
+  border-bottom: 1px solid var(--tf-hairline);
 }
 
 .board-column__count {
+  min-width: 24px;
+  padding: 2px 8px;
+  text-align: center;
+  border-radius: 999px;
+  background-color: var(--mat-sys-surface-container-high);
   color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-label-large);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .board-column__list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-height: 64px;
+  gap: 10px;
+  min-height: 72px;
+  padding: 2px;
+  border-radius: var(--mat-sys-corner-medium);
+  transition: background-color 120ms ease;
+}
+
+// Drop feedback: the receiving lane lights with a faint iris field so the
+// keyboard/pointer target is obvious (DESIGN §2 accent used for selection).
+.board-column__list.cdk-drop-list-receiving,
+.board-column__list.cdk-drop-list-dragging {
+  background-color: var(--tf-accent-soft);
 }
 
 .board-column__empty {
   margin: 0;
-  padding: 16px;
+  padding: 20px 16px;
   text-align: center;
+  border: 1px dashed var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-medium);
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-small);
 }
 
-// DESIGN.md §5: cards lift to elevation 3 while dragging.
+// The lifted card while dragging: a real (but restrained) shadow + hairline.
 .cdk-drag-preview {
-  box-shadow: var(--mat-sys-level3);
-  border-radius: 12px;
+  box-shadow: var(--tf-shadow-2);
+  border-radius: var(--mat-sys-corner-large);
 }
 
-// DESIGN.md §6: emphasized 250ms settle when a card drops into place.
+// The card's landing slot (a dashed iris ghost) is styled inside task-card's
+// own scope via :host(.cdk-drag-placeholder) — the class lands on that host.
+
+// DESIGN §6: emphasized ~250ms settle when a card drops into place.
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0.05, 0.7, 0.1, 1);
 }
 
 .board-column__list.cdk-drop-list-dragging .cdk-drag {
   transition: transform 250ms cubic-bezier(0.05, 0.7, 0.1, 1);
-}
-
-.cdk-drag-placeholder {
-  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

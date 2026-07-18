@@ -1,17 +1,27 @@
+// Dialog title in the display voice (DESIGN §3).
+.mat-mdc-dialog-title {
+  font-family: var(--tf-font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
 .dialog-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 320px;
+  gap: 12px;
+  min-width: 360px;
+  padding-top: 8px;
 }
 
+// Action error mirrors the auth card: hairline error field, not a heavy fill.
 .dialog-form__error {
-  margin: 0 0 8px;
-  padding: 16px;
-  border-radius: 12px;
+  margin: 0 0 4px;
+  padding: 12px 14px;
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
   background-color: var(--mat-sys-error-container);
   color: var(--mat-sys-on-error-container);
-  font: var(--mat-sys-body-medium);
+  font: var(--mat-sys-body-small);
 }
 
 .dialog-form__field {

@@ -1,6 +1,6 @@
 <div class="tf-page">
   <header class="page-header">
-    <h1 class="page-header__title">Dashboard</h1>
+    <h1 class="page-header__title tf-display">Dashboard</h1>
   </header>
 
   @if (dashboardStore.loading()) {
@@ -18,7 +18,7 @@
     />
   } @else {
     <section class="dashboard-section" aria-labelledby="myTasksHeading">
-      <h2 id="myTasksHeading" class="dashboard-section__title">My tasks</h2>
+      <h2 id="myTasksHeading" class="dashboard-section__title tf-display">My tasks</h2>
 
       @if (dashboardStore.myTasks().length === 0) {
         <tf-empty-state
@@ -31,11 +31,11 @@
         @for (group of dashboardStore.dueDateGroups(); track group.key) {
           <div class="due-group">
             <h3
-              class="due-group__title"
+              class="due-group__title tf-eyebrow"
               [class.due-group__title--overdue]="group.key === 'OVERDUE'"
             >
               {{ group.label }}
-              <span class="due-group__count">{{ group.tasks.length }}</span>
+              <span class="due-group__count tf-mono">{{ group.tasks.length }}</span>
             </h3>
             <ul class="my-tasks">
               @for (task of group.tasks; track task.id) {
@@ -51,7 +51,7 @@
                     <tf-status-chip [status]="task.status" />
                     <tf-priority-badge [priority]="task.priority" />
                     @if (task.dueDate) {
-                      <span class="my-task__due">
+                      <span class="my-task__due tf-mono">
                         <mat-icon class="tf-icon-sm" aria-hidden="true">event</mat-icon>
                         {{ task.dueDate | tfDueDate }}
                       </span>
@@ -66,7 +66,7 @@
     </section>
 
     <section class="dashboard-section" aria-labelledby="projectsHeading">
-      <h2 id="projectsHeading" class="dashboard-section__title">Projects</h2>
+      <h2 id="projectsHeading" class="dashboard-section__title tf-display">Projects</h2>
 
       @if (dashboardStore.projectSummaries().length === 0) {
         <tf-empty-state
@@ -88,15 +88,15 @@
                   <dl class="summary-card__counts">
                     <div class="summary-card__count">
                       <dt><tf-status-chip status="TODO" /></dt>
-                      <dd>{{ summary.todoCount }}</dd>
+                      <dd class="tf-mono">{{ summary.todoCount }}</dd>
                     </div>
                     <div class="summary-card__count">
                       <dt><tf-status-chip status="IN_PROGRESS" /></dt>
-                      <dd>{{ summary.inProgressCount }}</dd>
+                      <dd class="tf-mono">{{ summary.inProgressCount }}</dd>
                     </div>
                     <div class="summary-card__count">
                       <dt><tf-status-chip status="DONE" /></dt>
-                      <dd>{{ summary.doneCount }}</dd>
+                      <dd class="tf-mono">{{ summary.doneCount }}</dd>
                     </div>
                   </dl>
                 </mat-card>

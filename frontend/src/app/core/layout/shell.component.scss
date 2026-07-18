@@ -5,8 +5,8 @@
   height: 100%;
 }
 
-// Keyboard skip link (DESIGN §8): off-screen until focused, then anchors to
-// the top-left and moves focus to the main content region.
+// Keyboard skip link (DESIGN §8): off-screen until focused, then anchors to the
+// top-left and moves focus to the main content region.
 .shell__skip-link {
   position: absolute;
   left: 8px;
@@ -27,35 +27,76 @@
   outline-offset: 2px;
 }
 
-// The main region is a programmatic focus target for the skip link; it should
-// never show a focus ring when focused this way (not a keyboard-tabbed stop).
+// The main region is a programmatic focus target for the skip link; never show a
+// focus ring when focused this way (not a keyboard-tabbed stop).
 .shell__content:focus {
   outline: none;
 }
 
 .shell__toolbar {
-  // DESIGN.md §5: app bar at elevation 0 with a border.
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  background-color: var(--mat-sys-surface);
-  gap: 8px;
+  // App bar sits flush on the canvas with a hairline underline (elevation 0).
+  height: 60px;
+  border-bottom: 1px solid var(--tf-hairline);
+  background-color: color-mix(in srgb, var(--mat-sys-surface) 82%, transparent);
+  backdrop-filter: blur(8px);
+  gap: 4px;
   flex-shrink: 0;
 }
 
+// Wordmark: an iris mark + the name in the display face.
 .shell__wordmark {
-  color: var(--mat-sys-primary);
-  font: var(--mat-sys-title-large);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  color: var(--mat-sys-on-surface);
   text-decoration: none;
 }
 
-// Consistent M3 focus ring for keyboard users on the shell's plain-anchor controls (DESIGN §8).
-.shell__wordmark:focus-visible,
-.shell__nav-link:focus-visible {
-  outline: 2px solid var(--mat-sys-primary);
-  outline-offset: 2px;
+.shell__mark {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: linear-gradient(150deg, var(--mat-sys-primary), #b6bcff);
+  box-shadow: 0 0 0 1px rgba(139, 147, 255, 0.35);
+  position: relative;
+}
+
+// A small "flow" glyph inside the mark: two offset bars.
+.shell__mark::before,
+.shell__mark::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  height: 2.5px;
+  border-radius: 2px;
+  background-color: var(--mat-sys-on-primary);
+}
+
+.shell__mark::before {
+  top: 7px;
+  width: 12px;
+}
+
+.shell__mark::after {
+  top: 12px;
+  width: 8px;
+  opacity: 0.7;
+}
+
+.shell__wordmark-text {
+  font-size: 18px;
+  letter-spacing: -0.02em;
 }
 
 .shell__spacer {
   flex: 1;
+}
+
+.shell__user-button {
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .shell__user-name {
@@ -74,35 +115,64 @@
 .shell__nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px;
-  width: 88px;
+  gap: 4px;
+  padding: 12px 8px;
+  width: 92px;
   flex-shrink: 0;
-  border-right: 1px solid var(--mat-sys-outline-variant);
+  border-right: 1px solid var(--tf-hairline);
 }
 
 .shell__nav-link {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 8px;
-  min-height: 56px;
-  border-radius: 16px;
+  gap: 5px;
+  padding: 10px 4px;
+  min-height: 58px;
+  border-radius: 10px;
   color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-label-large);
+  font: var(--mat-sys-label-medium);
   text-decoration: none;
-  transition: background-color 100ms ease;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
 }
 
 .shell__nav-link:hover {
+  color: var(--mat-sys-on-surface);
   background-color: var(--mat-sys-surface-container-high);
 }
 
+// Active: iris text + a soft iris-tinted field + a left accent bar.
 .shell__nav-link--active {
-  color: var(--mat-sys-on-secondary-container);
-  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-primary);
+  background-color: var(--tf-accent-soft);
+}
+
+.shell__nav-link--active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--mat-sys-primary);
+}
+
+.shell__wordmark:focus-visible,
+.shell__nav-link:focus-visible {
+  outline: 2px solid var(--tf-ring);
+  outline-offset: 2px;
 }
 
 .shell__content {
@@ -112,7 +182,7 @@
 }
 
 @media (max-width: 599px) {
-  // Bottom navigation instead of a rail (DESIGN.md §4).
+  // Bottom navigation instead of a rail (DESIGN §4).
   .shell__body {
     flex-direction: column-reverse;
   }
@@ -121,11 +191,22 @@
     flex-direction: row;
     justify-content: space-around;
     width: auto;
+    padding: 6px 8px;
     border-right: none;
-    border-top: 1px solid var(--mat-sys-outline-variant);
+    border-top: 1px solid var(--tf-hairline);
   }
 
   .shell__nav-link {
     flex: 0 1 96px;
+    min-height: 52px;
+  }
+
+  .shell__nav-link--active::before {
+    left: 50%;
+    top: -6px;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
   }
 }

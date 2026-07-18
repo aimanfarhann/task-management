@@ -1,7 +1,10 @@
 <div class="shell">
   <a class="shell__skip-link" href="#main-content">Skip to content</a>
   <mat-toolbar class="shell__toolbar">
-    <a routerLink="/dashboard" class="shell__wordmark">TaskFlow</a>
+    <a routerLink="/dashboard" class="shell__wordmark" aria-label="TaskFlow — dashboard">
+      <span class="shell__mark" aria-hidden="true"></span>
+      <span class="shell__wordmark-text tf-display">TaskFlow</span>
+    </a>
     <span class="shell__spacer"></span>
     <button
       mat-icon-button

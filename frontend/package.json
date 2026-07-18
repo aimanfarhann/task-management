@@ -22,7 +22,9 @@
     "@angular/material": "^22.0.5",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "@fontsource/roboto": "^5.2.10",
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@fontsource-variable/space-grotesk": "^5.2.10",
     "material-icons": "^1.13.14",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

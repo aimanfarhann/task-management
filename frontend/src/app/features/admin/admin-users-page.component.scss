@@ -2,9 +2,13 @@
   margin-bottom: 24px;
 }
 
+// Page title in the display voice (DESIGN §3).
 .page-header__title {
   margin: 0;
   font: var(--mat-sys-headline-small);
+  font-family: var(--tf-font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 .admin-users__skeleton {
@@ -15,18 +19,67 @@
 
 .admin-users__error {
   margin: 0 0 16px;
-  color: var(--mat-sys-error);
-  font: var(--mat-sys-body-medium);
+  padding: 12px 14px;
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font: var(--mat-sys-body-small);
 }
 
+// --- Table: a single hairline surface with a tonal header + row rhythm -----
 .admin-users__table-wrapper {
   overflow-x: auto;
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: 12px;
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-large);
+  box-shadow: var(--tf-shadow-1);
 }
 
 .admin-users__table {
   width: 100%;
+  background: transparent;
+
+  .mat-mdc-header-row {
+    background-color: var(--mat-sys-surface-container);
+  }
+
+  .mat-mdc-header-cell {
+    font-family: var(--tf-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+    border-bottom-color: var(--tf-hairline);
+  }
+
+  .mat-mdc-row {
+    transition: background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .mat-mdc-row:hover {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  .mat-mdc-cell {
+    border-bottom-color: var(--tf-hairline);
+    color: var(--mat-sys-on-surface);
+  }
+
+  .mat-mdc-row:last-of-type .mat-mdc-cell {
+    border-bottom: none;
+  }
+
+  // Joined date speaks in the mono metadata voice (data cell only, so the header
+  // keeps its eyebrow tracking — the .mat-column-* class lands on th too).
+  td.mat-column-createdAt {
+    font-family: var(--tf-font-mono);
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: -0.01em;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
 }
 
 // ADMIN chips use the secondary-container role so the elevated role reads at a
@@ -54,8 +107,11 @@
 
 .admin-users__self-note {
   // Visible, screen-reader-reachable text replacing a disabled self-action button (DESIGN §8/§9).
-  color: var(--mat-sys-on-surface-variant);
+  // Mono voice signals it's a system note, not an action.
   font: var(--mat-sys-body-small);
+  font-family: var(--tf-font-mono);
+  letter-spacing: -0.01em;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .admin-users__action {

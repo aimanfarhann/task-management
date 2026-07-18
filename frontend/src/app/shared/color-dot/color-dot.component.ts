@@ -23,6 +23,8 @@ import { Component, input } from '@angular/core';
       height: 12px;
       border-radius: 50%;
       flex-shrink: 0;
+      // Hairline halo keeps the swatch crisp against the dark surface (DESIGN §5).
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--mat-sys-on-surface) 14%, transparent);
     }
   `,
 })

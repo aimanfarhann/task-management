@@ -7,19 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <script>
-      // Apply the dark scheme before Angular boots to avoid a light-to-dark flash (DESIGN §2).
-      // Mirrors ThemeStore.resolveInitialTheme: explicit 'taskflow.theme' wins, else system pref.
+      // Apply the light scheme before Angular boots to avoid a flash (DESIGN §2). The app is
+      // dark-first (base = dark); mirrors ThemeStore.resolveInitialTheme: only an explicit
+      // 'light' choice opts into light. Anything else stays on the default dark scheme.
       (function () {
         try {
-          var stored = localStorage.getItem('taskflow.theme');
-          var dark = stored
-            ? stored === 'dark'
-            : window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (dark) {
-            document.documentElement.classList.add('tf-dark');
+          if (localStorage.getItem('taskflow.theme') === 'light') {
+            document.documentElement.classList.add('tf-light');
           }
         } catch (error) {
-          /* localStorage unavailable (private mode) — fall back to the default light scheme. */
+          /* localStorage unavailable (private mode) — keep the default dark scheme. */
         }
       })();
     </script>

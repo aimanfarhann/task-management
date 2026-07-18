@@ -26,9 +26,16 @@ import { MatIconModule } from '@angular/material/icon';
     }
 
     .empty-state__icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
+      /* Glyph sits in a hairline-framed tonal badge — refined, not floating (DESIGN §5). */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      font-size: 34px;
+      border-radius: var(--mat-sys-corner-large);
+      border: 1px solid var(--tf-hairline);
+      background-color: var(--mat-sys-surface-container);
       color: var(--mat-sys-on-surface-variant);
     }
 

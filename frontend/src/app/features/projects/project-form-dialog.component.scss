@@ -1,16 +1,26 @@
+// Dialog title in the display voice (DESIGN §3), matching the sibling dialogs.
+h2[mat-dialog-title] {
+  font-family: var(--tf-font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
 .dialog-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  padding-top: 8px;
+  min-width: min(420px, 78vw);
 }
 
 .dialog-form__error {
-  margin: 0 0 8px;
-  padding: 16px;
-  border-radius: 12px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
   background-color: var(--mat-sys-error-container);
   color: var(--mat-sys-on-error-container);
-  font: var(--mat-sys-body-medium);
+  font: var(--mat-sys-body-small);
 }
 
 .dialog-form__field {
@@ -20,18 +30,44 @@
 .dialog-form__colors {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
+// "Color" reads as a small section eyebrow (mono, uppercase) — the tool voice.
 .dialog-form__colors-label {
-  font: var(--mat-sys-body-medium);
+  font-family: var(--tf-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--mat-sys-on-surface-variant);
 }
 
+// The 8 swatches as a tidy grid of hairline chips.
 .color-picker {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
   gap: 8px;
+}
+
+.color-picker .mat-mdc-radio-button {
+  border: 1px solid var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface-container-low);
+  transition:
+    background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-high);
+    border-color: var(--mat-sys-outline);
+  }
+}
+
+// Selected swatch: the single iris accent + a soft tinted field (DESIGN §2).
+.color-picker .mat-mdc-radio-button.mat-mdc-radio-checked {
+  border-color: var(--mat-sys-primary);
+  background-color: var(--tf-accent-soft);
 }
 
 .color-picker__label {

@@ -1,29 +1,81 @@
 .task-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
+// --- Filters: refined outline controls sitting on the canvas ---------------
 .task-list__filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
+  align-items: center;
 }
 
 .task-list__filter {
   width: 200px;
 }
 
+// --- Table: a single hairline surface with a tonal header + row rhythm -----
 .task-list__table-wrapper {
   overflow-x: auto;
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: 12px;
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-large);
+  box-shadow: var(--tf-shadow-1);
 }
 
 .task-list__table {
   width: 100%;
+  background: transparent;
+
+  // Header reads as a quiet tonal band with mono eyebrow labels (the tool voice).
+  .mat-mdc-header-row {
+    background-color: var(--mat-sys-surface-container);
+  }
+
+  .mat-mdc-header-cell {
+    font-family: var(--tf-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+    border-bottom-color: var(--tf-hairline);
+  }
+
+  // Comfortable row rhythm; a calm tone shift on hover (no floating).
+  .mat-mdc-row {
+    transition: background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .mat-mdc-row:hover {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  .mat-mdc-cell {
+    border-bottom-color: var(--tf-hairline);
+    color: var(--mat-sys-on-surface);
+  }
+
+  // The surface edge closes the table; the last divider is redundant.
+  .mat-mdc-row:last-of-type .mat-mdc-cell {
+    border-bottom: none;
+  }
+
+  // Metadata voice: mono, tabular figures, muted — data cells only, so the
+  // header keeps its eyebrow tracking (the .mat-column-* class lands on th too).
+  td.mat-column-dueDate,
+  td.mat-column-createdAt {
+    font-family: var(--tf-font-mono);
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: -0.01em;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
 }
 
+// The title cell is the primary affordance: iris link, underline on interaction.
 .task-list__title {
   margin: 0;
   padding: 0;
@@ -33,14 +85,21 @@
   cursor: pointer;
   color: var(--mat-sys-primary);
   font: var(--mat-sys-body-medium);
+  font-weight: 500;
+}
+
+.task-list__title:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .task-list__title:focus-visible {
-  outline: 2px solid var(--mat-sys-primary);
+  outline: 2px solid var(--tf-ring);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
+// Overdue keeps its own colour + weight over the muted metadata voice.
 .task-list__due--overdue {
   color: var(--tf-priority-high);
   font-weight: 500;
@@ -50,10 +109,14 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
+// Empty result reads as a considered, hairline-framed panel (DESIGN §7).
 .task-list__empty {
   margin: 0;
-  padding: 32px;
+  padding: 48px 24px;
   text-align: center;
+  background-color: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-large);
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-medium);
 }

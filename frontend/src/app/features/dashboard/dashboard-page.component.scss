@@ -1,10 +1,19 @@
+// Dashboard — the landing screen. "Focus": display-font title, an eyebrow-led
+// section rhythm, task rows as hairline surfaces, and the mono voice for every
+// date/count. Depth comes from tone + hairline, never heavy shadow (DESIGN §5).
+
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .page-header__title {
   margin: 0;
-  font: var(--mat-sys-headline-small);
+  // Display face, page-title scale — the one hero moment on the screen.
+  font-family: var(--tf-font-display);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mat-sys-on-surface);
 }
 
 .dashboard__skeleton {
@@ -14,33 +23,62 @@
 }
 
 .dashboard-section {
-  margin-bottom: 32px;
+  margin-bottom: 40px;
+}
+
+.dashboard-section:last-child {
+  margin-bottom: 0;
 }
 
 .dashboard-section__title {
-  margin: 0 0 16px;
-  font: var(--mat-sys-title-medium);
+  margin: 0 0 20px;
+  font-family: var(--tf-font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--mat-sys-on-surface);
 }
 
 .due-group {
   margin-bottom: 24px;
 }
 
+.due-group:last-child {
+  margin-bottom: 0;
+}
+
+// Group label carries the .tf-eyebrow voice (mono, uppercase). Component styles
+// only lay it out and re-color the overdue case so the eyebrow font is kept.
 .due-group__title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 8px;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-title-small);
+  gap: 10px;
+  margin: 0 0 10px;
 }
 
 .due-group__title--overdue {
   color: var(--tf-priority-high);
 }
 
+// Count reads as a compact mono chip on a raised hairline fill.
 .due-group__count {
-  font: var(--mat-sys-label-medium);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  padding: 1px 7px;
+  border: 1px solid var(--tf-hairline);
+  border-radius: var(--mat-sys-corner-small);
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 11px;
+  line-height: 18px;
+  // Overdue tints its own count so the whole label reads at a glance.
+  .due-group__title--overdue & {
+    color: var(--tf-priority-high);
+    border-color: color-mix(in srgb, var(--tf-priority-high) 35%, transparent);
+    background-color: color-mix(in srgb, var(--tf-priority-high) 12%, transparent);
+  }
 }
 
 .my-tasks {
@@ -52,16 +90,47 @@
   gap: 8px;
 }
 
+// Task row: a hairline Focus surface. Raise on hover by tone shift + a left
+// iris bar (the shell's active-nav signature), never by floating.
 .my-task {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 16px 18px;
+  border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface-container-low);
-  border: 1px solid var(--mat-sys-outline-variant);
+  border: 1px solid var(--tf-hairline);
+  box-shadow: var(--tf-shadow-1);
+  transition:
+    background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.my-task::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--mat-sys-primary);
+  opacity: 0;
+  transition: opacity 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.my-task:hover,
+.my-task:focus-within {
+  background-color: var(--mat-sys-surface-container);
+  border-color: var(--mat-sys-outline);
+}
+
+.my-task:hover::before,
+.my-task:focus-within::before {
+  opacity: 1;
 }
 
 .my-task__link {
@@ -74,20 +143,25 @@
 }
 
 .my-task__link:focus-visible {
-  outline: 2px solid var(--mat-sys-primary);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid var(--tf-ring);
+  outline-offset: 3px;
+  border-radius: var(--mat-sys-corner-extra-small);
 }
 
 .my-task__title {
   font: var(--mat-sys-title-medium);
   color: var(--mat-sys-on-surface);
+  transition: color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.my-task:hover .my-task__title {
+  color: var(--mat-sys-primary);
 }
 
 .my-task__project {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   color: var(--mat-sys-on-surface-variant);
   font: var(--mat-sys-body-small);
 }
@@ -99,13 +173,17 @@
   gap: 16px;
 }
 
+// Due date — mono metadata voice (.tf-mono keeps the family; size/color here).
 .my-task__due {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-small);
+  font-size: 12px;
+  font-weight: 500;
 }
+
+// --- Project summary cards --------------------------------------------------
 
 .summary-grid {
   list-style: none;
@@ -119,32 +197,38 @@
 .summary-card-link {
   display: block;
   height: 100%;
-  border-radius: 12px;
+  border-radius: var(--mat-sys-corner-large);
   text-decoration: none;
 }
 
 .summary-card-link:focus-visible {
-  outline: 2px solid var(--mat-sys-primary);
+  outline: 2px solid var(--tf-ring);
   outline-offset: 2px;
 }
 
 .summary-card {
   height: 100%;
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: background-color 100ms ease;
+  transition:
+    background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.summary-card-link:hover .summary-card {
-  background-color: var(--mat-sys-surface-container-high);
+.summary-card-link:hover .summary-card,
+.summary-card-link:focus-visible .summary-card {
+  background-color: var(--mat-sys-surface-container);
+  border-color: var(--mat-sys-outline);
 }
 
 .summary-card__header {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--tf-hairline);
 }
 
 .summary-card__name {
@@ -155,9 +239,11 @@
   white-space: nowrap;
 }
 
+// Status counts read at a glance as three even columns, each an icon+label chip
+// over a prominent mono number — count never leans on color alone (DESIGN §8).
 .summary-card__counts {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin: 0;
 }
@@ -166,10 +252,27 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 8px;
+}
+
+.summary-card__count dt {
+  margin: 0;
 }
 
 .summary-card__count dd {
   margin: 0;
-  font: var(--mat-sys-title-medium);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--mat-sys-on-surface);
+}
+
+@media (max-width: 599px) {
+  .page-header__title {
+    font-size: 26px;
+  }
+
+  .my-task {
+    padding: 14px 16px;
+  }
 }

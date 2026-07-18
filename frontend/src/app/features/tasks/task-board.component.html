@@ -3,7 +3,7 @@
     <section class="board-column" [attr.aria-label]="column.label">
       <header class="board-column__header">
         <tf-status-chip [status]="column.status" />
-        <span class="board-column__count">{{ column.tasks().length }}</span>
+        <span class="board-column__count tf-mono">{{ column.tasks().length }}</span>
       </header>
 
       <div
