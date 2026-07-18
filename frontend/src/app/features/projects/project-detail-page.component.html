@@ -58,6 +58,74 @@
       }
     </header>
 
+    <section class="tasks" aria-labelledby="tasksHeading">
+      <div class="tasks__header">
+        <h2 id="tasksHeading" class="tasks__title">Tasks</h2>
+        <div class="tasks__controls">
+          <mat-button-toggle-group
+            class="tasks__view-toggle"
+            [value]="taskView()"
+            (change)="taskView.set($event.value)"
+            aria-label="Task view"
+          >
+            <mat-button-toggle value="board">
+              <mat-icon aria-hidden="true">view_kanban</mat-icon>
+              Board
+            </mat-button-toggle>
+            <mat-button-toggle value="list">
+              <mat-icon aria-hidden="true">view_list</mat-icon>
+              List
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <button mat-flat-button type="button" (click)="openCreateTask()">
+            <mat-icon aria-hidden="true">add</mat-icon>
+            New task
+          </button>
+        </div>
+      </div>
+
+      @if (taskError(); as message) {
+        <p class="detail-error" role="alert">{{ message }}</p>
+      }
+
+      @if (taskStore.loading()) {
+        <div class="tasks__skeleton" aria-hidden="true">
+          <tf-skeleton width="30%" height="40px" />
+          <tf-skeleton height="200px" />
+        </div>
+      } @else if (taskStore.error(); as message) {
+        <tf-empty-state
+          icon="error_outline"
+          [message]="message"
+          actionLabel="Retry"
+          (action)="reloadTasks()"
+        />
+      } @else if (taskStore.tasks().length === 0) {
+        <tf-empty-state
+          icon="task_alt"
+          message="No tasks yet. Create the first task for this project."
+          actionLabel="Create task"
+          (action)="openCreateTask()"
+        />
+      } @else if (taskView() === 'board') {
+        <tf-task-board
+          (openTask)="openTaskDetail($event)"
+          (editTask)="openEditTask($event)"
+          (removeTask)="deleteTask($event)"
+          (moveTask)="changeTaskStatus($event)"
+        />
+      } @else {
+        <tf-task-list
+          [tasks]="taskStore.tasks()"
+          [members]="projectStore.members()"
+          (openTask)="openTaskDetail($event)"
+          (editTask)="openEditTask($event)"
+          (removeTask)="deleteTask($event)"
+          (moveTask)="changeTaskStatus($event)"
+        />
+      }
+    </section>
+
     <section class="members" aria-labelledby="membersHeading">
       <div class="members__header">
         <h2 id="membersHeading" class="members__title">

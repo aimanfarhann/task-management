@@ -1,0 +1,108 @@
+<h2 mat-dialog-title class="task-detail__title">{{ task.title }}</h2>
+
+<mat-dialog-content class="task-detail">
+  <div class="task-detail__badges">
+    <tf-status-chip [status]="task.status" />
+    <tf-priority-badge [priority]="task.priority" />
+  </div>
+
+  @if (task.description) {
+    <p class="task-detail__description">{{ task.description }}</p>
+  }
+
+  <dl class="task-detail__facts">
+    <div class="task-detail__fact">
+      <dt>Assignee</dt>
+      <dd>{{ task.assignee?.displayName ?? 'Unassigned' }}</dd>
+    </div>
+    <div class="task-detail__fact">
+      <dt>Due date</dt>
+      <dd>
+        @if (task.dueDate) {
+          <span [class.task-detail__overdue]="overdue">
+            {{ task.dueDate | tfDueDate }}
+            @if (overdue) {
+              <span class="cdk-visually-hidden">(overdue)</span>
+            }
+          </span>
+        } @else {
+          Not set
+        }
+      </dd>
+    </div>
+    <div class="task-detail__fact">
+      <dt>Created by</dt>
+      <dd>{{ task.createdBy.displayName }}</dd>
+    </div>
+    <div class="task-detail__fact">
+      <dt>Created</dt>
+      <dd>{{ task.createdAt | date: 'medium' }}</dd>
+    </div>
+  </dl>
+
+  <section class="comments" aria-labelledby="commentsHeading">
+    <h3 id="commentsHeading" class="comments__heading">Comments</h3>
+
+    @if (commentError(); as message) {
+      <p class="task-detail__error" role="alert">{{ message }}</p>
+    }
+
+    @if (commentStore.loading()) {
+      <div class="comments__loading" aria-hidden="true">
+        @for (slot of skeletonSlots; track slot) {
+          <tf-skeleton height="56px" />
+        }
+      </div>
+    } @else if (commentStore.error(); as message) {
+      <p class="task-detail__error" role="alert">{{ message }}</p>
+    } @else if (!hasComments()) {
+      <tf-empty-state icon="forum" message="No comments yet. Start the conversation." />
+    } @else {
+      <ul class="comments__list">
+        @for (comment of commentStore.comments(); track comment.id) {
+          <li class="comment">
+            <div class="comment__header">
+              <span class="comment__author">{{ comment.author.displayName }}</span>
+              <span class="comment__time">{{ comment.createdAt | date: 'medium' }}</span>
+              @if (canDelete(comment)) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="comment__delete"
+                  (click)="deleteComment(comment)"
+                  [attr.aria-label]="'Delete comment by ' + comment.author.displayName"
+                >
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              }
+            </div>
+            <p class="comment__body">{{ comment.body }}</p>
+          </li>
+        }
+      </ul>
+    }
+
+    <form class="comment-form" [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field class="comment-form__field">
+        <mat-label>Add a comment</mat-label>
+        <textarea matInput formControlName="body" rows="3" maxlength="2000"></textarea>
+        @if (form.controls.body.hasError('required')) {
+          <mat-error>Comment cannot be empty.</mat-error>
+        } @else if (form.controls.body.hasError('maxlength')) {
+          <mat-error>Comment must be 2000 characters or fewer.</mat-error>
+        }
+      </mat-form-field>
+      <button mat-flat-button type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Posting…' : 'Comment' }}
+      </button>
+    </form>
+  </section>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="requestEdit()">
+    <mat-icon aria-hidden="true">edit</mat-icon>
+    Edit task
+  </button>
+  <button mat-button type="button" [mat-dialog-close]="undefined">Close</button>
+</mat-dialog-actions>

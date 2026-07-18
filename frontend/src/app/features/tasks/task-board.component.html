@@ -1,0 +1,32 @@
+<div class="board" cdkDropListGroup>
+  @for (column of columns; track column.status) {
+    <section class="board-column" [attr.aria-label]="column.label">
+      <header class="board-column__header">
+        <tf-status-chip [status]="column.status" />
+        <span class="board-column__count">{{ column.tasks().length }}</span>
+      </header>
+
+      <div
+        class="board-column__list"
+        cdkDropList
+        [cdkDropListData]="column.status"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        @for (task of column.tasks(); track task.id) {
+          <tf-task-card
+            cdkDrag
+            [cdkDragData]="task"
+            [task]="task"
+            (open)="openTask.emit(task)"
+            (edit)="editTask.emit(task)"
+            (remove)="removeTask.emit(task)"
+            (moveTo)="requestMove(task, $event)"
+          />
+        }
+        @if (column.tasks().length === 0) {
+          <p class="board-column__empty">No tasks</p>
+        }
+      </div>
+    </section>
+  }
+</div>

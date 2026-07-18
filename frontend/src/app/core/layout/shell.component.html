@@ -1,6 +1,6 @@
 <div class="shell">
   <mat-toolbar class="shell__toolbar">
-    <a routerLink="/projects" class="shell__wordmark">TaskFlow</a>
+    <a routerLink="/dashboard" class="shell__wordmark">TaskFlow</a>
     <span class="shell__spacer"></span>
     <button
       mat-icon-button
@@ -28,6 +28,15 @@
 
   <div class="shell__body">
     <nav class="shell__nav" aria-label="Primary">
+      <a
+        class="shell__nav-link"
+        routerLink="/dashboard"
+        routerLinkActive="shell__nav-link--active"
+        ariaCurrentWhenActive="page"
+      >
+        <mat-icon aria-hidden="true">dashboard</mat-icon>
+        <span class="shell__nav-label">Dashboard</span>
+      </a>
       <a
         class="shell__nav-link"
         routerLink="/projects"

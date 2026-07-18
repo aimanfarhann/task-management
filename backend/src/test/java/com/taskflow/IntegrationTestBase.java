@@ -131,6 +131,41 @@ public abstract class IntegrationTestBase {
         .andExpect(status().isCreated());
   }
 
+  /** Adds a user to a project as an OWNER via the API. */
+  protected void addOwner(TestUser owner, long projectId, TestUser newOwner) throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/projects/" + projectId + "/members")
+                .header("Authorization", bearer(owner))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                    {"email":"%s","projectRole":"OWNER"}
+                    """
+                        .formatted(newOwner.email())))
+        .andExpect(status().isCreated());
+  }
+
+  /** Creates a task in a project via the API and returns its id. */
+  protected long createTask(TestUser member, long projectId, String title) throws Exception {
+    String response =
+        mockMvc
+            .perform(
+                post("/api/v1/projects/" + projectId + "/tasks")
+                    .header("Authorization", bearer(member))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        """
+                        {"title":"%s"}
+                        """
+                            .formatted(title)))
+            .andExpect(status().isCreated())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    return objectMapper.readTree(response).get("id").asLong();
+  }
+
   /** Returns the Authorization header value for the given test user. */
   protected String bearer(TestUser user) {
     return "Bearer " + user.accessToken();

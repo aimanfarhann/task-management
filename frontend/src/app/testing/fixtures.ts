@@ -1,5 +1,14 @@
 import { ComponentFixture } from '@angular/core/testing';
-import { MemberDto, ProjectDto } from '../core/api/models';
+import {
+  CommentDto,
+  DashboardDto,
+  DashboardTaskDto,
+  MemberDto,
+  ProjectDto,
+  ProjectSummaryDto,
+  TaskDto,
+  UserSummary,
+} from '../core/api/models';
 import { AuthResponse } from '../core/auth/models';
 
 /**
@@ -56,6 +65,68 @@ export function buildMember(overrides: Partial<MemberDto> = {}): MemberDto {
     displayName: 'Ada Lovelace',
     projectRole: 'OWNER',
     joinedAt: '2026-07-01T10:00:00Z',
+    ...overrides,
+  };
+}
+
+export function buildUserSummary(overrides: Partial<UserSummary> = {}): UserSummary {
+  return { userId: 1, displayName: 'Ada Lovelace', ...overrides };
+}
+
+export function buildTask(overrides: Partial<TaskDto> = {}): TaskDto {
+  return {
+    id: 1,
+    projectId: 1,
+    title: 'Write the spec',
+    description: null,
+    status: 'TODO',
+    priority: 'MEDIUM',
+    dueDate: null,
+    assignee: null,
+    createdBy: buildUserSummary(),
+    createdAt: '2026-07-01T10:00:00Z',
+    updatedAt: '2026-07-01T10:00:00Z',
+    ...overrides,
+  };
+}
+
+export function buildComment(overrides: Partial<CommentDto> = {}): CommentDto {
+  return {
+    id: 1,
+    taskId: 1,
+    author: buildUserSummary(),
+    body: 'Looks good to me',
+    createdAt: '2026-07-02T09:00:00Z',
+    ...overrides,
+  };
+}
+
+export function buildDashboardTask(overrides: Partial<DashboardTaskDto> = {}): DashboardTaskDto {
+  return {
+    ...buildTask(),
+    assignee: buildUserSummary(),
+    projectName: 'Apollo',
+    projectColorTag: 'blue',
+    ...overrides,
+  };
+}
+
+export function buildProjectSummary(overrides: Partial<ProjectSummaryDto> = {}): ProjectSummaryDto {
+  return {
+    projectId: 1,
+    projectName: 'Apollo',
+    colorTag: 'blue',
+    todoCount: 2,
+    inProgressCount: 1,
+    doneCount: 3,
+    ...overrides,
+  };
+}
+
+export function buildDashboard(overrides: Partial<DashboardDto> = {}): DashboardDto {
+  return {
+    myTasks: [buildDashboardTask()],
+    projectSummaries: [buildProjectSummary()],
     ...overrides,
   };
 }

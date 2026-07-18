@@ -1,0 +1,110 @@
+<div class="tf-page">
+  <header class="page-header">
+    <h1 class="page-header__title">Dashboard</h1>
+  </header>
+
+  @if (dashboardStore.loading()) {
+    <div class="dashboard__skeleton" aria-hidden="true">
+      @for (slot of skeletonSlots; track slot) {
+        <tf-skeleton height="96px" />
+      }
+    </div>
+  } @else if (dashboardStore.error(); as message) {
+    <tf-empty-state
+      icon="error_outline"
+      [message]="message"
+      actionLabel="Retry"
+      (action)="reload()"
+    />
+  } @else {
+    <section class="dashboard-section" aria-labelledby="myTasksHeading">
+      <h2 id="myTasksHeading" class="dashboard-section__title">My tasks</h2>
+
+      @if (dashboardStore.myTasks().length === 0) {
+        <tf-empty-state
+          icon="task_alt"
+          message="No tasks are assigned to you right now."
+          actionLabel="Browse projects"
+          (action)="goToProjects()"
+        />
+      } @else {
+        @for (group of dashboardStore.dueDateGroups(); track group.key) {
+          <div class="due-group">
+            <h3
+              class="due-group__title"
+              [class.due-group__title--overdue]="group.key === 'OVERDUE'"
+            >
+              {{ group.label }}
+              <span class="due-group__count">{{ group.tasks.length }}</span>
+            </h3>
+            <ul class="my-tasks">
+              @for (task of group.tasks; track task.id) {
+                <li class="my-task">
+                  <a class="my-task__link" [routerLink]="['/projects', task.projectId]">
+                    <span class="my-task__title">{{ task.title }}</span>
+                    <span class="my-task__project">
+                      <tf-color-dot [colorTag]="task.projectColorTag" />
+                      {{ task.projectName }}
+                    </span>
+                  </a>
+                  <div class="my-task__meta">
+                    <tf-status-chip [status]="task.status" />
+                    <tf-priority-badge [priority]="task.priority" />
+                    @if (task.dueDate) {
+                      <span class="my-task__due">
+                        <mat-icon class="tf-icon-sm" aria-hidden="true">event</mat-icon>
+                        {{ task.dueDate | tfDueDate }}
+                      </span>
+                    }
+                  </div>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    </section>
+
+    <section class="dashboard-section" aria-labelledby="projectsHeading">
+      <h2 id="projectsHeading" class="dashboard-section__title">Projects</h2>
+
+      @if (dashboardStore.projectSummaries().length === 0) {
+        <tf-empty-state
+          icon="folder_open"
+          message="You are not a member of any project yet."
+          actionLabel="Go to projects"
+          (action)="goToProjects()"
+        />
+      } @else {
+        <ul class="summary-grid">
+          @for (summary of dashboardStore.projectSummaries(); track summary.projectId) {
+            <li class="summary-grid__item">
+              <a class="summary-card-link" [routerLink]="['/projects', summary.projectId]">
+                <mat-card class="summary-card">
+                  <div class="summary-card__header">
+                    <tf-color-dot [colorTag]="summary.colorTag" />
+                    <span class="summary-card__name">{{ summary.projectName }}</span>
+                  </div>
+                  <dl class="summary-card__counts">
+                    <div class="summary-card__count">
+                      <dt><tf-status-chip status="TODO" /></dt>
+                      <dd>{{ summary.todoCount }}</dd>
+                    </div>
+                    <div class="summary-card__count">
+                      <dt><tf-status-chip status="IN_PROGRESS" /></dt>
+                      <dd>{{ summary.inProgressCount }}</dd>
+                    </div>
+                    <div class="summary-card__count">
+                      <dt><tf-status-chip status="DONE" /></dt>
+                      <dd>{{ summary.doneCount }}</dd>
+                    </div>
+                  </dl>
+                </mat-card>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</div>

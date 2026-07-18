@@ -72,6 +72,20 @@ public class ProjectAuthService {
     }
   }
 
+  /**
+   * Returns whether a user is currently a member of a project. Membership is by explicit
+   * project_members row only — a system ADMIN is not counted as a member here. Used to validate
+   * that a task assignee actually belongs to the project.
+   *
+   * @param projectId the project id
+   * @param userId the user id to check
+   * @return true if the user holds a membership in the project
+   */
+  @Transactional(readOnly = true)
+  public boolean isMember(Long projectId, Long userId) {
+    return projectMemberRepository.existsByProjectIdAndUserId(projectId, userId);
+  }
+
   private void assertProjectExists(Long projectId) {
     if (!projectRepository.existsById(projectId)) {
       throw new ResourceNotFoundException(

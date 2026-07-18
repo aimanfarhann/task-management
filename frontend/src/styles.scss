@@ -50,12 +50,14 @@ html {
 
   // Semantic status/priority colors (DESIGN.md §2) — defined once here with
   // dark variants below; components consume only these custom properties.
-  --tf-status-todo: #6b7280;
-  --tf-status-in-progress: #2563eb;
-  --tf-status-done: #16a34a;
-  --tf-priority-high: #dc2626;
-  --tf-priority-medium: #d97706;
-  --tf-priority-low: #6b7280;
+  // Light values are the darker 700-level shades so the label text they color
+  // clears WCAG AA (>=4.5:1) on card surfaces (surface-container-low), per §8.
+  --tf-status-todo: #4b5563;
+  --tf-status-in-progress: #1d4ed8;
+  --tf-status-done: #15803d;
+  --tf-priority-high: #b91c1c;
+  --tf-priority-medium: #b45309;
+  --tf-priority-low: #4b5563;
 
   // The 8 preset project colorTag hues (API contract keys, DESIGN.md §2).
   --tf-tag-red: #b91c1c;

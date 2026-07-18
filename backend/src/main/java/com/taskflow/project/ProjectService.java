@@ -10,6 +10,7 @@ import com.taskflow.user.UserService;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,6 +141,42 @@ public class ProjectService {
         request.name(), request.description(), request.colorTag(), request.archived());
     log.info("Project {} updated by user {}", projectId, currentUser.id());
     return toDtoWithCallerContext(project, currentUser);
+  }
+
+  /**
+   * Lists the projects a user is a member of, membership-based. Unlike {@link
+   * #listProjects(AuthenticatedUser)}, a system ADMIN is not special-cased — the dashboard reflects
+   * actual memberships only. Used by the dashboard feature.
+   *
+   * @param userId the user whose memberships are listed
+   * @return the user's projects with their role and member counts
+   */
+  @Transactional(readOnly = true)
+  public List<ProjectDto> listMembershipProjects(Long userId) {
+    List<ProjectMember> memberships = projectMemberRepository.findByUserIdWithProject(userId);
+    Map<Long, Long> counts =
+        memberCountsFor(memberships.stream().map(m -> m.getProject().getId()).toList());
+    return memberships.stream()
+        .map(
+            membership ->
+                ProjectMapper.toDto(
+                    membership.getProject(),
+                    membership.getProjectRole(),
+                    counts.getOrDefault(membership.getProject().getId(), 0L)))
+        .toList();
+  }
+
+  /**
+   * Finds a project entity by id. Exposed for other features that need a managed {@link Project}
+   * reference to establish an association (mirrors {@link
+   * com.taskflow.user.UserService#findById(Long)}); those callers assert authorization first.
+   *
+   * @param projectId the project id
+   * @return the project, or empty if the id is unknown
+   */
+  @Transactional(readOnly = true)
+  public Optional<Project> findById(Long projectId) {
+    return projectRepository.findById(projectId);
   }
 
   private Project loadProject(Long projectId) {

@@ -5,6 +5,11 @@ import com.taskflow.project.Project;
 import com.taskflow.project.ProjectMember;
 import com.taskflow.project.ProjectMemberCount;
 import com.taskflow.project.ProjectRole;
+import com.taskflow.task.Task;
+import com.taskflow.task.TaskComment;
+import com.taskflow.task.TaskPriority;
+import com.taskflow.task.TaskStatus;
+import com.taskflow.task.TaskStatusCount;
 import com.taskflow.user.Role;
 import com.taskflow.user.User;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -58,6 +63,50 @@ public final class TestData {
   /** Creates the authenticated principal for a system admin. */
   public static AuthenticatedUser authAdmin(Long id) {
     return new AuthenticatedUser(id, "admin-" + id + "@test.com", Role.ADMIN);
+  }
+
+  /** Creates a task with the given id in {@code TODO}, MEDIUM priority, no assignee. */
+  public static Task task(Long id, Project project, User createdBy) {
+    Task task = new Task(project, "Task " + id, null, TaskPriority.MEDIUM, null, null, createdBy);
+    ReflectionTestUtils.setField(task, "id", id);
+    return task;
+  }
+
+  /** Creates a task with the given id, assignee, and status. */
+  public static Task task(
+      Long id, Project project, User createdBy, User assignee, TaskStatus status) {
+    Task task =
+        new Task(project, "Task " + id, null, TaskPriority.MEDIUM, null, assignee, createdBy);
+    ReflectionTestUtils.setField(task, "id", id);
+    ReflectionTestUtils.setField(task, "status", status);
+    return task;
+  }
+
+  /** Creates a comment with the given id on the given task. */
+  public static TaskComment comment(Long id, Task task, User author, String body) {
+    TaskComment comment = new TaskComment(task, author, body);
+    ReflectionTestUtils.setField(comment, "id", id);
+    return comment;
+  }
+
+  /** Creates a status-count projection as returned by the group-by count query. */
+  public static TaskStatusCount taskStatusCount(Long projectId, TaskStatus status, long count) {
+    return new TaskStatusCount() {
+      @Override
+      public Long getProjectId() {
+        return projectId;
+      }
+
+      @Override
+      public TaskStatus getStatus() {
+        return status;
+      }
+
+      @Override
+      public long getCount() {
+        return count;
+      }
+    };
   }
 
   /** Creates a member-count projection as returned by the group-by count query. */

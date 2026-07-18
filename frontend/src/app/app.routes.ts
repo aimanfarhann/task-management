@@ -3,7 +3,7 @@ import { authGuard, guestGuard } from './core/auth/auth.guard';
 import { ShellComponent } from './core/layout/shell.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'projects' },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   {
     path: '',
     canActivate: [guestGuard],
@@ -15,11 +15,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-page.component').then(
+            (m) => m.DashboardPageComponent,
+          ),
+      },
+      {
         path: 'projects',
         loadChildren: () =>
           import('./features/projects/projects.routes').then((m) => m.PROJECTS_ROUTES),
       },
     ],
   },
-  { path: '**', redirectTo: 'projects' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

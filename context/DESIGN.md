@@ -25,14 +25,18 @@ Built on a Material 3 theme generated from the seed color. Use Angular Material 
 
 ### Semantic status colors (task domain)
 
+Rendered as **label text** (not tinted backgrounds), so the light values are the darker
+700-level shades that clear WCAG AA (§8, ≥4.5:1) on card surfaces (`surface-container-low`).
+Dark-mode variants are defined alongside them and verified separately.
+
 | Meaning | Light | Notes |
 |---|---|---|
-| Status TODO | neutral gray `#6B7280` | Never use primary for TODO |
-| Status IN_PROGRESS | blue `#2563EB` | |
-| Status DONE | green `#16A34A` | |
-| Priority HIGH | red `#DC2626` | Icon + label, never color alone |
-| Priority MEDIUM | amber `#D97706` | |
-| Priority LOW | gray `#6B7280` | |
+| Status TODO | neutral gray `#4B5563` | Never use primary for TODO |
+| Status IN_PROGRESS | blue `#1D4ED8` | |
+| Status DONE | green `#15803D` | |
+| Priority HIGH | red `#B91C1C` | Icon + label, never color alone |
+| Priority MEDIUM | amber `#B45309` | |
+| Priority LOW | gray `#4B5563` | |
 
 Project color tags: fixed palette of 8 muted hues offered at project creation — no free color picker.
 

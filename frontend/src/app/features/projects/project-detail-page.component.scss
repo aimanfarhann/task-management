@@ -56,6 +56,37 @@
   font: var(--mat-sys-body-medium);
 }
 
+.tasks {
+  margin-bottom: 32px;
+}
+
+.tasks__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.tasks__title {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+}
+
+.tasks__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.tasks__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .members__header {
   display: flex;
   align-items: center;

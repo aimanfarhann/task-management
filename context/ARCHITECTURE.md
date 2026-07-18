@@ -62,8 +62,11 @@ backend/src/main/java/com/taskflow/
 ├── auth/                     # AuthController, AuthService, dto/
 ├── user/                     # UserController, UserService, User, UserRepository, dto/
 ├── project/                  # ProjectController, ProjectService, Project, ProjectMember, dto/
-└── task/                     # TaskController, TaskService, Task, TaskComment, dto/
+├── task/                     # TaskController, TaskCommentController, services, Task, TaskComment, dto/
+└── dashboard/                # DashboardController, DashboardService, dto/ (read-only aggregation over project + task)
 ```
+
+The `dashboard/` feature is read-only: it aggregates across the `project` and `task` features (through their services, never their repositories) to assemble the caller's dashboard. It owns no entity of its own.
 
 Each feature package is self-contained: controller, service, entities, repository, DTOs. Cross-feature access goes through the other feature's **service**, never its repository.
 

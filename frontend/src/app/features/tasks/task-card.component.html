@@ -1,0 +1,58 @@
+<article class="task-card">
+  <div class="task-card__top">
+    <button type="button" class="task-card__title" (click)="open.emit()">
+      {{ task().title }}
+    </button>
+    <button
+      mat-icon-button
+      type="button"
+      class="task-card__menu-button"
+      [matMenuTriggerFor]="menu"
+      aria-label="Task actions"
+    >
+      <mat-icon aria-hidden="true">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item type="button" (click)="open.emit()">
+        <mat-icon aria-hidden="true">open_in_full</mat-icon>
+        <span>View details</span>
+      </button>
+      <button mat-menu-item type="button" (click)="edit.emit()">
+        <mat-icon aria-hidden="true">edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      @for (option of moveOptions(); track option.status) {
+        <button mat-menu-item type="button" (click)="moveTo.emit(option.status)">
+          <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
+          <span>Move to {{ option.label }}</span>
+        </button>
+      }
+      <button mat-menu-item type="button" (click)="remove.emit()">
+        <mat-icon aria-hidden="true">delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <div class="task-card__meta">
+    <tf-priority-badge [priority]="task().priority" />
+    @if (task().dueDate; as dueDate) {
+      <span
+        class="task-card__due"
+        [class.task-card__due--overdue]="overdue()"
+        [matTooltip]="overdue() ? 'Overdue' : ''"
+      >
+        <mat-icon class="tf-icon-sm" aria-hidden="true">event</mat-icon>
+        <span>{{ dueDate | tfDueDate }}</span>
+        @if (overdue()) {
+          <span class="cdk-visually-hidden">(overdue)</span>
+        }
+      </span>
+    }
+  </div>
+
+  <div class="task-card__assignee">
+    <mat-icon class="tf-icon-sm" aria-hidden="true">person</mat-icon>
+    <span>{{ task().assignee?.displayName ?? 'Unassigned' }}</span>
+  </div>
+</article>

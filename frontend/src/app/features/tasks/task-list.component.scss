@@ -1,0 +1,59 @@
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-list__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.task-list__filter {
+  width: 200px;
+}
+
+.task-list__table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+}
+
+.task-list__table {
+  width: 100%;
+}
+
+.task-list__title {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--mat-sys-primary);
+  font: var(--mat-sys-body-medium);
+}
+
+.task-list__title:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.task-list__due--overdue {
+  color: var(--tf-priority-high);
+  font-weight: 500;
+}
+
+.task-list__muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.task-list__empty {
+  margin: 0;
+  padding: 32px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}

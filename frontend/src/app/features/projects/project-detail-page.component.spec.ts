@@ -39,6 +39,9 @@ describe('ProjectDetailPageComponent', () => {
       .expectOne('/api/v1/projects/7/members')
       .flush([buildMember(), buildMember({ userId: 2, displayName: 'Grace Hopper' })]);
     await settle(fixture);
+    // Tasks load only after the project resolves successfully.
+    httpMock.expectOne('/api/v1/projects/7/tasks').flush([]);
+    await settle(fixture);
 
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('h1')?.textContent).toContain('Apollo');
@@ -54,6 +57,8 @@ describe('ProjectDetailPageComponent', () => {
     httpMock
       .expectOne('/api/v1/projects/7/members')
       .flush([buildMember({ userId: 99, displayName: 'Someone Else', projectRole: 'OWNER' })]);
+    await settle(fixture);
+    httpMock.expectOne('/api/v1/projects/7/tasks').flush([]);
     await settle(fixture);
 
     const element = fixture.nativeElement as HTMLElement;
