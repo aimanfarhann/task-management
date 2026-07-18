@@ -1,0 +1,5 @@
+node_modules
+dist
+.angular
+# Vendored spartan-ng helm components (generated) — keep as-is.
+src/app/ui

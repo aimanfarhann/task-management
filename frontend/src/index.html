@@ -11,12 +11,15 @@
       // dark-first (base = dark); mirrors ThemeStore.resolveInitialTheme: only an explicit
       // 'light' choice opts into light. Anything else stays on the default dark scheme.
       (function () {
+        var root = document.documentElement;
         try {
           if (localStorage.getItem('taskflow.theme') === 'light') {
-            document.documentElement.classList.add('tf-light');
+            root.classList.add('tf-light');
+          } else {
+            root.classList.add('dark');
           }
         } catch (error) {
-          /* localStorage unavailable (private mode) — keep the default dark scheme. */
+          root.classList.add('dark'); /* localStorage unavailable — keep default dark */
         }
       })();
     </script>

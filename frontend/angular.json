@@ -35,7 +35,8 @@
               "node_modules/@fontsource-variable/space-grotesk/index.css",
               "node_modules/@fontsource-variable/jetbrains-mono/index.css",
               "node_modules/material-icons/iconfont/filled.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/tailwind.css"
             ]
           },
           "configurations": {

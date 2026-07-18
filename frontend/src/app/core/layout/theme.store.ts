@@ -38,7 +38,10 @@ export class ThemeStore {
   }
 
   private applyTheme(theme: ThemePreference): void {
-    // Base scheme is dark; .tf-light opts into the light scheme.
-    this.document.documentElement.classList.toggle('tf-light', theme === 'light');
+    // Dark-first. `.dark` drives the spartan/Tailwind tokens; `.tf-light` drives
+    // the legacy Material tokens (kept in sync during the migration).
+    const root = this.document.documentElement;
+    root.classList.toggle('dark', theme === 'dark');
+    root.classList.toggle('tf-light', theme === 'light');
   }
 }

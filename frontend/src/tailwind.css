@@ -1,0 +1,210 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import 'tw-animate-css';
+
+@import '@spartan-ng/brain/hlm-tailwind-preset.css';
+
+/* TaskFlow "Focus" theme on spartan-ng / Tailwind v4 tokens. Dark-first: the app
+   applies .dark by default (ThemeStore); .tf-light also drives the legacy Material
+   theme during the migration. Values re-express the Focus identity: deep slate
+   surfaces, a single iris accent, refined radii. */
+
+@theme {
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+/* Light (opt-in) --------------------------------------------------------------*/
+:root {
+  color-scheme: light;
+  --radius: 0.5rem;
+
+  --background: #f6f7f9;
+  --foreground: #14161d;
+  --card: #ffffff;
+  --card-foreground: #14161d;
+  --popover: #ffffff;
+  --popover-foreground: #14161d;
+  --primary: #4b53d9;
+  --primary-foreground: #ffffff;
+  --secondary: #eceef3;
+  --secondary-foreground: #262b36;
+  --muted: #eceef3;
+  --muted-foreground: #545b6a;
+  --accent: #e6e8ef;
+  --accent-foreground: #191a5e;
+  --destructive: #ba1a1a;
+  --border: #e0e3ea;
+  --input: #d5d8e0;
+  --ring: #4b53d9;
+  --sidebar: #f1f2f6;
+  --sidebar-foreground: #14161d;
+  --sidebar-primary: #4b53d9;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6e8ef;
+  --sidebar-accent-foreground: #191a5e;
+  --sidebar-border: #e0e3ea;
+  --sidebar-ring: #4b53d9;
+
+  /* Semantic status/priority + tag hues (survive Material's removal). */
+  --tf-status-todo: #4b5563;
+  --tf-status-in-progress: #1d4ed8;
+  --tf-status-done: #15803d;
+  --tf-priority-high: #b91c1c;
+  --tf-priority-medium: #b45309;
+  --tf-priority-low: #4b5563;
+  --tf-tag-red: #b91c1c;
+  --tf-tag-orange: #c2410c;
+  --tf-tag-amber: #b45309;
+  --tf-tag-green: #15803d;
+  --tf-tag-teal: #0f766e;
+  --tf-tag-blue: #1d4ed8;
+  --tf-tag-indigo: #4338ca;
+  --tf-tag-purple: #7e22ce;
+
+  --tf-hairline: var(--border);
+  --tf-ring: color-mix(in srgb, var(--ring) 55%, transparent);
+  --tf-accent-soft: color-mix(in srgb, var(--primary) 10%, transparent);
+  --tf-shadow-1: 0 1px 2px rgba(20, 22, 29, 0.08);
+  --tf-shadow-2: 0 8px 28px rgba(20, 22, 29, 0.12);
+  --tf-ambient: radial-gradient(120% 60% at 50% -10%, rgba(75, 83, 217, 0.05), transparent 60%);
+}
+
+/* Dark (default) --------------------------------------------------------------*/
+:root.dark {
+  color-scheme: dark;
+
+  --background: #0e1014;
+  --foreground: #e7e9ee;
+  --card: #14161d;
+  --card-foreground: #e7e9ee;
+  --popover: #171a22;
+  --popover-foreground: #e7e9ee;
+  --primary: #8b93ff;
+  --primary-foreground: #0b0d16;
+  --secondary: #232733;
+  --secondary-foreground: #e7e9ee;
+  --muted: #171a22;
+  --muted-foreground: #9aa2b1;
+  --accent: #232733;
+  --accent-foreground: #e7e9ee;
+  --destructive: #ff6b74;
+  --border: #24272f;
+  --input: #2a2f3a;
+  --ring: #8b93ff;
+  --sidebar: #14161d;
+  --sidebar-foreground: #e7e9ee;
+  --sidebar-primary: #8b93ff;
+  --sidebar-primary-foreground: #0b0d16;
+  --sidebar-accent: #232733;
+  --sidebar-accent-foreground: #e7e9ee;
+  --sidebar-border: #24272f;
+  --sidebar-ring: #8b93ff;
+
+  --tf-status-todo: #a2aab8;
+  --tf-status-in-progress: #6aa5ff;
+  --tf-status-done: #37d39e;
+  --tf-priority-high: #ff7a86;
+  --tf-priority-medium: #f6b23d;
+  --tf-priority-low: #a2aab8;
+  --tf-tag-red: #ff7a86;
+  --tf-tag-orange: #ff9d5c;
+  --tf-tag-amber: #f6b23d;
+  --tf-tag-green: #37d39e;
+  --tf-tag-teal: #2dd4c4;
+  --tf-tag-blue: #6aa5ff;
+  --tf-tag-indigo: #8b93ff;
+  --tf-tag-purple: #c48cff;
+
+  --tf-ring: color-mix(in srgb, var(--ring) 55%, transparent);
+  --tf-accent-soft: color-mix(in srgb, var(--primary) 12%, transparent);
+  --tf-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --tf-shadow-2: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --tf-ambient: radial-gradient(120% 60% at 50% -10%, rgba(139, 147, 255, 0.08), transparent 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    background-image: var(--tf-ambient);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Shared Focus utility classes (used directly in templates). --------------- */
+@layer components {
+  .tf-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    animation: tf-page-enter 220ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .tf-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .tf-mono {
+    font-family: var(--font-mono);
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: -0.01em;
+  }
+
+  .tf-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+}
+
+@keyframes tf-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Refined scrollbars for the dark canvas. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
