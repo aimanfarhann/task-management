@@ -1,0 +1,45 @@
+<div class="shell">
+  <mat-toolbar class="shell__toolbar">
+    <a routerLink="/projects" class="shell__wordmark">TaskFlow</a>
+    <span class="shell__spacer"></span>
+    <button
+      mat-icon-button
+      type="button"
+      (click)="themeStore.toggleTheme()"
+      [attr.aria-label]="
+        themeStore.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+      "
+    >
+      <mat-icon aria-hidden="true">
+        {{ themeStore.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}
+      </mat-icon>
+    </button>
+    <button mat-button type="button" class="shell__user-button" [matMenuTriggerFor]="userMenu">
+      <mat-icon aria-hidden="true">account_circle</mat-icon>
+      <span class="shell__user-name">{{ authStore.currentUser()?.displayName }}</span>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item type="button" (click)="signOut()">
+        <mat-icon aria-hidden="true">logout</mat-icon>
+        <span>Sign out</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <div class="shell__body">
+    <nav class="shell__nav" aria-label="Primary">
+      <a
+        class="shell__nav-link"
+        routerLink="/projects"
+        routerLinkActive="shell__nav-link--active"
+        ariaCurrentWhenActive="page"
+      >
+        <mat-icon aria-hidden="true">folder</mat-icon>
+        <span class="shell__nav-label">Projects</span>
+      </a>
+    </nav>
+    <main class="shell__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

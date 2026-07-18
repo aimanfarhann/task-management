@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>{{ project ? 'Edit project' : 'Create project' }}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content class="dialog-form">
+    @if (errorMessage(); as message) {
+      <p class="dialog-form__error" role="alert">{{ message }}</p>
+    }
+
+    <mat-form-field class="dialog-form__field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" maxlength="120" />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error>Name is required.</mat-error>
+      } @else if (form.controls.name.hasError('maxlength')) {
+        <mat-error>Name must be 120 characters or fewer.</mat-error>
+      } @else if (form.controls.name.hasError('server')) {
+        <mat-error>{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="dialog-form__field">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+      @if (form.controls.description.hasError('server')) {
+        <mat-error>{{ form.controls.description.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="dialog-form__colors">
+      <span class="dialog-form__colors-label" id="colorTagLabel">Color</span>
+      <mat-radio-group
+        formControlName="colorTag"
+        class="color-picker"
+        aria-labelledby="colorTagLabel"
+      >
+        @for (tag of colorTags; track tag) {
+          <mat-radio-button [value]="tag">
+            <span class="color-picker__label">
+              <tf-color-dot [colorTag]="tag" />
+              {{ tag }}
+            </span>
+          </mat-radio-button>
+        }
+      </mat-radio-group>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="undefined">Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Saving…' : project ? 'Save changes' : 'Create project' }}
+    </button>
+  </mat-dialog-actions>
+</form>

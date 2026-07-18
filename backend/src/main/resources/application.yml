@@ -1,0 +1,35 @@
+# Base configuration. Secrets (JWT secret, DB password) come strictly from the
+# environment (RULES.md §28) — no defaults here. Non-secret dev defaults live in
+# application-dev.yml.
+spring:
+  application:
+    name: taskflow
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+taskflow:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-ttl: 60m
+    refresh-token-ttl: 7d
+  cors:
+    allowed-origin: ${CORS_ALLOWED_ORIGIN}
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  pattern:
+    # Surface the per-request MDC request id next to the level in every log line.
+    level: "%5p [rid:%X{requestId:-}]"

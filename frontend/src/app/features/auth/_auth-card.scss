@@ -1,0 +1,79 @@
+// Shared layout for the login and register pages.
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100%;
+  padding: 24px;
+  animation: tf-auth-enter 200ms ease-out;
+}
+
+@keyframes tf-auth-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 48px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-card__wordmark {
+  color: var(--mat-sys-primary);
+  font: var(--mat-sys-title-medium);
+}
+
+.auth-card__title {
+  margin: 0;
+  font: var(--mat-sys-headline-small);
+}
+
+.auth-card__error {
+  margin: 0;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font: var(--mat-sys-body-medium);
+}
+
+.auth-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-card__submit {
+  min-height: 44px;
+}
+
+.auth-card__switch {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+
+  a {
+    color: var(--mat-sys-primary);
+    // Underline so the link is identifiable without relying on hue (DESIGN §8, WCAG 1.4.1).
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 599px) {
+  .auth-page {
+    padding: 16px;
+  }
+
+  .auth-card {
+    margin-top: 16px;
+  }
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TaskFlow</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script>
+      // Apply the dark scheme before Angular boots to avoid a light-to-dark flash (DESIGN §2).
+      // Mirrors ThemeStore.resolveInitialTheme: explicit 'taskflow.theme' wins, else system pref.
+      (function () {
+        try {
+          var stored = localStorage.getItem('taskflow.theme');
+          var dark = stored
+            ? stored === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) {
+            document.documentElement.classList.add('tf-dark');
+          }
+        } catch (error) {
+          /* localStorage unavailable (private mode) — fall back to the default light scheme. */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <tf-root></tf-root>
+  </body>
+</html>

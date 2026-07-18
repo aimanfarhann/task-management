@@ -1,0 +1,164 @@
+// TaskFlow global theme (DESIGN.md §2–§6).
+//
+// Third-party style dependencies (RULES.md §27), bundled via the angular.json
+// "styles" array so nothing is fetched from a CDN:
+// - @fontsource/roboto: self-hosts the Roboto font (DESIGN.md §3).
+// - material-icons: self-hosts the Material Icons ligature font that
+//   Angular Material's <mat-icon> uses by default.
+@use '@angular/material' as mat;
+@use './theme/theme-colors' as palettes;
+
+// Material 3 theme generated from the seed color #4355B9 (DESIGN.md §2).
+// The palettes in src/theme/_theme-colors.scss come from
+// `ng generate @angular/material:theme-color --primary-color=#4355B9`.
+// `use-system-variables` makes every component token resolve through the
+// `--mat-sys-*` custom properties emitted below, so the dark scheme only has
+// to re-emit the color variables.
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: palettes.$primary-palette,
+      tertiary: palettes.$tertiary-palette,
+      use-system-variables: true,
+    ),
+    typography: (
+      plain-family: Roboto,
+      brand-family: Roboto,
+      use-system-variables: true,
+    ),
+    density: (
+      scale: 0,
+    ),
+  )
+);
+
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: palettes.$primary-palette,
+      tertiary: palettes.$tertiary-palette,
+      use-system-variables: true,
+    ),
+  )
+);
+
+html {
+  height: 100%;
+  color-scheme: light;
+
+  // Semantic status/priority colors (DESIGN.md §2) — defined once here with
+  // dark variants below; components consume only these custom properties.
+  --tf-status-todo: #6b7280;
+  --tf-status-in-progress: #2563eb;
+  --tf-status-done: #16a34a;
+  --tf-priority-high: #dc2626;
+  --tf-priority-medium: #d97706;
+  --tf-priority-low: #6b7280;
+
+  // The 8 preset project colorTag hues (API contract keys, DESIGN.md §2).
+  --tf-tag-red: #b91c1c;
+  --tf-tag-orange: #c2410c;
+  --tf-tag-amber: #b45309;
+  --tf-tag-green: #15803d;
+  --tf-tag-teal: #0f766e;
+  --tf-tag-blue: #1d4ed8;
+  --tf-tag-indigo: #4338ca;
+  --tf-tag-purple: #7e22ce;
+
+  @include mat.system-level-colors($light-theme);
+  @include mat.system-level-typography($light-theme);
+  @include mat.system-level-elevation($light-theme);
+  @include mat.system-level-shape();
+  @include mat.system-level-state();
+  @include mat.all-component-themes($light-theme);
+}
+
+// Manual dark mode: ThemeStore toggles .tf-dark on <html>; the default follows
+// prefers-color-scheme and an explicit choice is persisted in localStorage.
+html.tf-dark {
+  color-scheme: dark;
+
+  --tf-status-todo: #9ca3af;
+  --tf-status-in-progress: #60a5fa;
+  --tf-status-done: #4ade80;
+  --tf-priority-high: #f87171;
+  --tf-priority-medium: #fbbf24;
+  --tf-priority-low: #9ca3af;
+
+  --tf-tag-red: #f87171;
+  --tf-tag-orange: #fb923c;
+  --tf-tag-amber: #fbbf24;
+  --tf-tag-green: #4ade80;
+  --tf-tag-teal: #2dd4bf;
+  --tf-tag-blue: #60a5fa;
+  --tf-tag-indigo: #818cf8;
+  --tf-tag-purple: #c084fc;
+
+  @include mat.system-level-colors($dark-theme);
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+}
+
+// Page container: max 1200px centered, 24px side padding, 16px under 600px
+// (DESIGN.md §4). Content fades in over 200ms (route transition, DESIGN.md §6).
+.tf-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: tf-page-enter 200ms ease-out;
+}
+
+@keyframes tf-page-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// Small non-interactive badge (e.g. "Archived") pairing icon + text so color
+// is never the only signal (DESIGN.md §8).
+.tf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background-color: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-medium);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Compact icon size for icon+text metadata rows.
+mat-icon.tf-icon-sm {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+// DESIGN.md §6: under prefers-reduced-motion replace movement with
+// (near-instant) opacity-only transitions.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

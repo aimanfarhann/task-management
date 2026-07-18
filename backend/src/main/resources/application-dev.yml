@@ -1,0 +1,18 @@
+# Dev profile: non-secret local defaults only. JWT_SECRET and
+# SPRING_DATASOURCE_PASSWORD must still come from the environment (RULES.md §28).
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/taskflow}
+    username: ${SPRING_DATASOURCE_USERNAME:taskflow}
+
+taskflow:
+  cors:
+    allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:4200}
+
+# OpenAPI spec is exposed in dev only (ARCHITECTURE.md §3.5).
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/docs
+  swagger-ui:
+    enabled: true

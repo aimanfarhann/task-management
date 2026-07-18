@@ -1,0 +1,42 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dialog-form__error {
+  margin: 0 0 8px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font: var(--mat-sys-body-medium);
+}
+
+.dialog-form__field {
+  width: 100%;
+}
+
+.dialog-form__colors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dialog-form__colors-label {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
+}
+
+.color-picker__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: capitalize;
+}

@@ -1,0 +1,102 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.shell__toolbar {
+  // DESIGN.md §5: app bar at elevation 0 with a border.
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.shell__wordmark {
+  color: var(--mat-sys-primary);
+  font: var(--mat-sys-title-large);
+  text-decoration: none;
+}
+
+// Consistent M3 focus ring for keyboard users on the shell's plain-anchor controls (DESIGN §8).
+.shell__wordmark:focus-visible,
+.shell__nav-link:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.shell__spacer {
+  flex: 1;
+}
+
+.shell__user-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.shell__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  width: 88px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.shell__nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  min-height: 56px;
+  border-radius: 16px;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-large);
+  text-decoration: none;
+  transition: background-color 100ms ease;
+}
+
+.shell__nav-link:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}
+
+.shell__nav-link--active {
+  color: var(--mat-sys-on-secondary-container);
+  background-color: var(--mat-sys-secondary-container);
+}
+
+.shell__content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+@media (max-width: 599px) {
+  // Bottom navigation instead of a rail (DESIGN.md §4).
+  .shell__body {
+    flex-direction: column-reverse;
+  }
+
+  .shell__nav {
+    flex-direction: row;
+    justify-content: space-around;
+    width: auto;
+    border-right: none;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  .shell__nav-link {
+    flex: 0 1 96px;
+  }
+}

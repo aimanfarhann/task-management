@@ -1,0 +1,75 @@
+<div class="tf-page">
+  <header class="page-header">
+    <h1 class="page-header__title">Projects</h1>
+    <div class="page-header__actions">
+      <mat-slide-toggle
+        [checked]="projectStore.showArchived()"
+        (change)="toggleShowArchived($event.checked)"
+      >
+        Show archived
+      </mat-slide-toggle>
+      <button mat-flat-button type="button" (click)="openCreateDialog()">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        New project
+      </button>
+    </div>
+  </header>
+
+  @if (projectStore.projectsLoading()) {
+    <div class="projects-grid" aria-hidden="true">
+      @for (slot of skeletonSlots; track slot) {
+        <tf-skeleton height="140px" />
+      }
+    </div>
+  } @else if (projectStore.projectsError(); as errorMessage) {
+    <tf-empty-state
+      icon="error_outline"
+      [message]="errorMessage"
+      actionLabel="Retry"
+      (action)="reload()"
+    />
+  } @else if (projectStore.visibleProjects().length === 0) {
+    <tf-empty-state
+      icon="folder_open"
+      [message]="
+        projectStore.projects().length === 0
+          ? 'No projects yet. Create your first project.'
+          : 'No active projects. Turn on “Show archived” to see archived ones.'
+      "
+      actionLabel="Create project"
+      (action)="openCreateDialog()"
+    />
+  } @else {
+    <ul class="projects-grid">
+      @for (project of projectStore.visibleProjects(); track project.id) {
+        <li class="projects-grid__item">
+          <a class="project-card-link" [routerLink]="[project.id]">
+            <mat-card class="project-card">
+              <div class="project-card__header">
+                <tf-color-dot [colorTag]="project.colorTag" />
+                <span class="project-card__name">{{ project.name }}</span>
+                @if (project.archived) {
+                  <span class="tf-badge">
+                    <mat-icon aria-hidden="true">inventory_2</mat-icon>
+                    Archived
+                  </span>
+                }
+              </div>
+              @if (project.description) {
+                <p class="project-card__description">{{ project.description }}</p>
+              }
+              <div class="project-card__meta">
+                <span class="project-card__members">
+                  <mat-icon class="tf-icon-sm" aria-hidden="true">group</mat-icon>
+                  {{ project.memberCount }}
+                  {{ project.memberCount === 1 ? 'member' : 'members' }}
+                </span>
+                <span>Created {{ project.createdAt | date: 'mediumDate' }}</span>
+              </div>
+            </mat-card>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</div>

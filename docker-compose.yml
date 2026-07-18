@@ -1,0 +1,60 @@
+name: taskflow
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: taskflow
+      POSTGRES_USER: taskflow
+      # No committed fallback (RULES §28): compose fails fast if POSTGRES_PASSWORD is unset.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env — see .env.example}
+    ports:
+      # Bound to loopback so the dev database is never exposed on the host's network.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskflow -d taskflow"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Full-stack-in-Docker is opt-in: `docker compose --profile full up`.
+  # Default day-to-day dev runs backend/frontend natively against `docker compose up -d postgres`.
+  backend:
+    profiles: ["full"]
+    image: maven:3.9-eclipse-temurin-21
+    working_dir: /app
+    command: mvn spring-boot:run
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskflow
+      SPRING_DATASOURCE_USERNAME: taskflow
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env — see .env.example}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env — see .env.example}
+      CORS_ALLOWED_ORIGIN: http://localhost:4200
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - m2cache:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    profiles: ["full"]
+    image: node:24-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm start -- --host 0.0.0.0 --poll 2000"
+    environment:
+      NG_CLI_ANALYTICS: "false"
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+
+volumes:
+  pgdata:
+  m2cache:
+  frontend_node_modules:
