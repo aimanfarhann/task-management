@@ -1,11 +1,11 @@
-// Shared layout for the login and register pages — the first impression.
+// Shared page layout for login/register (the card + fields are Tailwind utilities
+// in the templates; this only carries the centered layout + the iris hero glow).
 .auth-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100dvh;
   padding: 24px;
-  // A localized iris glow behind the card makes the entry moment the hero.
   background: radial-gradient(90% 55% at 50% 22%, rgba(139, 147, 255, 0.14), transparent 62%);
   animation: tf-auth-enter 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
@@ -15,86 +15,9 @@
     opacity: 0;
     transform: translateY(8px);
   }
-
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  // Layered surface with a hairline edge and a real (but quiet) lift.
-  border: 1px solid var(--tf-hairline) !important;
-  border-radius: var(--mat-sys-corner-extra-large) !important;
-  background-color: var(--mat-sys-surface-container-low) !important;
-  box-shadow: var(--tf-shadow-2) !important;
-}
-
-.auth-card__wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--tf-font-display);
-  font-weight: 600;
-  font-size: 18px;
-  letter-spacing: -0.02em;
-  color: var(--mat-sys-on-surface);
-}
-
-.auth-card__wordmark::before {
-  content: '';
-  width: 22px;
-  height: 22px;
-  border-radius: 7px;
-  background: linear-gradient(150deg, var(--mat-sys-primary), #b6bcff);
-  box-shadow: 0 0 0 1px rgba(139, 147, 255, 0.35);
-}
-
-.auth-card__title {
-  margin: 0;
-  font-family: var(--tf-font-display);
-  font-weight: 600;
-  font-size: 28px;
-  letter-spacing: -0.02em;
-}
-
-.auth-card__error {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: var(--mat-sys-corner-medium);
-  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
-  background-color: var(--mat-sys-error-container);
-  color: var(--mat-sys-on-error-container);
-  font: var(--mat-sys-body-small);
-}
-
-.auth-card__form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.auth-card__submit {
-  min-height: 46px;
-  margin-top: 4px;
-  font-weight: 600;
-}
-
-.auth-card__switch {
-  margin: 0;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-medium);
-
-  a {
-    color: var(--mat-sys-primary);
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 }
 
@@ -102,10 +25,5 @@
   .auth-page {
     padding: 16px;
     align-items: flex-start;
-  }
-
-  .auth-card {
-    margin-top: 24px;
-    padding: 20px;
   }
 }

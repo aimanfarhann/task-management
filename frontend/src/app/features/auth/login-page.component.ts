@@ -1,23 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmLabel } from '@spartan-ng/helm/label';
 import { applyFieldErrors, toApiErrorBody } from '../../core/api/api-error';
 import { AuthStore } from '../../core/auth/auth.store';
 
 @Component({
   selector: 'tf-login-page',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, HlmButton, HlmInput, HlmLabel],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
