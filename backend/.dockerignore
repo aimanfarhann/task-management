@@ -1,0 +1,9 @@
+# Build output and VCS/tooling — never needed in the image build context.
+target/
+.git/
+.gitignore
+.gitattributes
+.idea/
+*.iml
+Dockerfile
+.dockerignore

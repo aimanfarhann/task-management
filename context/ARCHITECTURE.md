@@ -165,7 +165,7 @@ Components never call `HttpClient` directly, never hold copies of server state, 
 | Config | `application.yml` + environment overrides; secrets only via env vars |
 | Logging | SLF4J structured logging; request-id (MDC) filter; no logging of tokens/passwords |
 | Testing | JUnit 5 + Mockito (service), MockMvc + Testcontainers (API/repo), Karma/Jasmine (frontend units) |
-| Local dev | `docker compose up -d postgres` + native backend/frontend; `docker compose --profile full up` runs the whole stack in containers |
+| Local dev | `docker compose up -d postgres` + native backend/frontend; `docker compose up -d --build` builds production images (jar on a JRE, Angular served by nginx) and runs the whole stack |
 
 ## 6. Design Principles Applied
 

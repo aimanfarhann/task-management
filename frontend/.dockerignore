@@ -1,0 +1,10 @@
+# Exclude the host's install/build output so `COPY . .` never overwrites the
+# image's fresh `npm ci` with a wrong-platform node_modules.
+node_modules/
+dist/
+.angular/
+.git/
+.gitignore
+.vscode/
+Dockerfile
+.dockerignore

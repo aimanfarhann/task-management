@@ -1,5 +1,8 @@
 name: taskflow
 
+# Full stack from built images:  docker compose up -d --build   (app at http://localhost:4200)
+# Just the DB for native dev:     docker compose up -d postgres
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -19,13 +22,11 @@ services:
       timeout: 3s
       retries: 10
 
-  # Full-stack-in-Docker is opt-in: `docker compose --profile full up`.
-  # Default day-to-day dev runs backend/frontend natively against `docker compose up -d postgres`.
+  # Multi-stage build -> executable jar on a slim JRE. Runs with no Spring profile
+  # (production defaults; OpenAPI disabled), all config supplied from the environment.
   backend:
-    profiles: ["full"]
-    image: maven:3.9-eclipse-temurin-21
-    working_dir: /app
-    command: mvn spring-boot:run
+    build:
+      context: ./backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskflow
       SPRING_DATASOURCE_USERNAME: taskflow
@@ -34,27 +35,19 @@ services:
       CORS_ALLOWED_ORIGIN: http://localhost:4200
     ports:
       - "8080:8080"
-    volumes:
-      - ./backend:/app
-      - m2cache:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
 
+  # Multi-stage build -> static Angular bundle served by nginx, which proxies /api
+  # to the backend. Published on 4200 so the app origin matches native dev.
   frontend:
-    profiles: ["full"]
-    image: node:24-alpine
-    working_dir: /app
-    command: sh -c "npm ci && npm start -- --host 0.0.0.0 --poll 2000"
-    environment:
-      NG_CLI_ANALYTICS: "false"
+    build:
+      context: ./frontend
     ports:
-      - "4200:4200"
-    volumes:
-      - ./frontend:/app
-      - frontend_node_modules:/app/node_modules
+      - "4200:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
-  m2cache:
-  frontend_node_modules:

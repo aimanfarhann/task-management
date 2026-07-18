@@ -17,10 +17,25 @@ Project documentation lives in [context/](context/) — read [RULES.md](context/
 - Docker (for PostgreSQL and integration tests)
 - JDK 21 and Node.js ≥ 20 for native development
 
-## Quickstart
+Copy the env file first (both flows read it):
 
 ```bash
 cp .env.example .env        # then set JWT_SECRET (openssl rand -hex 64)
+```
+
+### Run the whole stack in Docker
+
+Builds production images (jar on a slim JRE; Angular bundle served by nginx that proxies `/api` to the backend) and runs everything — no local JDK/Node needed. App at http://localhost:4200.
+
+```bash
+docker compose up -d --build
+```
+
+### Native development (faster inner loop)
+
+Run only PostgreSQL in Docker and the app on the host:
+
+```bash
 docker compose up -d postgres
 ```
 
@@ -37,12 +52,6 @@ cd backend
 cd frontend
 npm install
 npm start
-```
-
-**Everything in Docker instead** (no local JDK/Node needed):
-
-```bash
-docker compose --profile full up
 ```
 
 ## Verification
