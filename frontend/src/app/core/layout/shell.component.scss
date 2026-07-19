@@ -34,17 +34,19 @@
   outline: none;
 }
 
+// App bar: a layered, iris-tinted translucent band with a hairline underline.
 .shell__toolbar {
-  // App bar sits flush on the canvas with a hairline underline (elevation 0).
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
   height: 60px;
-  padding: 0 12px;
-  border-bottom: 1px solid var(--tf-hairline);
-  background-color: color-mix(in srgb, var(--background) 82%, transparent);
-  backdrop-filter: blur(8px);
+  padding: 0 16px;
   flex-shrink: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--primary) 5%, transparent), transparent 30%),
+    color-mix(in srgb, var(--background) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
 }
 
 // Wordmark: an iris mark + the name in the display face.
@@ -64,8 +66,11 @@
   flex-shrink: 0;
   border-radius: 7px;
   background: linear-gradient(150deg, var(--primary), #b6bcff);
-  box-shadow: 0 0 0 1px rgba(139, 147, 255, 0.35);
   position: relative;
+  // Refined iris halo — the shell's one glow moment.
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent),
+    0 0 16px color-mix(in srgb, var(--primary) 45%, transparent);
 }
 
 // A small "flow" glyph inside the mark: two offset bars.
@@ -95,13 +100,111 @@
   letter-spacing: -0.02em;
 }
 
+// ⌘K search pill — a command-palette trigger.
+.shell__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  width: 240px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  color: var(--muted-foreground);
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.shell__search:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+  background-color: color-mix(in srgb, var(--secondary) 70%, transparent);
+}
+
+.shell__search-text {
+  flex: 1;
+  text-align: left;
+}
+
+.shell__search-kbd {
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background-color: var(--card);
+  color: var(--muted-foreground);
+  font-size: 10.5px;
+  line-height: 1;
+}
+
 .shell__spacer {
   flex: 1;
 }
 
-.shell__user-button {
-  gap: 8px;
+// Circular bordered pill — theme toggle.
+.shell__icon-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
   color: var(--muted-foreground);
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.shell__icon-pill:hover {
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+  background-color: color-mix(in srgb, var(--secondary) 70%, transparent);
+}
+
+// User menu trigger as an avatar chip.
+.shell__user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+  padding: 4px 12px 4px 5px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  color: var(--foreground);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.shell__user-chip:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+  background-color: color-mix(in srgb, var(--secondary) 70%, transparent);
+}
+
+.shell__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(150deg, var(--primary), #b6bcff);
+  color: var(--primary-foreground);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 .shell__user-name {
@@ -111,20 +214,39 @@
   white-space: nowrap;
 }
 
+.shell__user-caret {
+  color: var(--muted-foreground);
+}
+
+.shell__wordmark:focus-visible,
+.shell__search:focus-visible,
+.shell__icon-pill:focus-visible,
+.shell__user-chip:focus-visible,
+.shell__nav-link:focus-visible {
+  outline: 2px solid var(--tf-ring);
+  outline-offset: 2px;
+}
+
 .shell__body {
   display: flex;
   flex: 1;
   min-height: 0;
 }
 
+// Navigation rail — a hairline surface with a faint iris wash at the top.
 .shell__nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 12px 8px;
+  gap: 6px;
+  padding: 14px 10px;
   width: 92px;
   flex-shrink: 0;
-  border-right: 1px solid var(--tf-hairline);
+  border-right: 1px solid color-mix(in srgb, var(--primary) 10%, var(--border));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--primary) 4%, transparent),
+    transparent 220px
+  );
 }
 
 .shell__nav-link {
@@ -136,14 +258,16 @@
   gap: 5px;
   padding: 10px 4px;
   min-height: 58px;
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
   color: var(--muted-foreground);
   font-size: 0.75rem;
   font-weight: 500;
   text-decoration: none;
   transition:
     background-color 120ms ease,
-    color 120ms ease;
+    color 120ms ease,
+    border-color 120ms ease;
 }
 
 .shell__nav-link:hover {
@@ -151,28 +275,32 @@
   background-color: var(--accent);
 }
 
-// Active: iris text + a soft iris-tinted field + a left accent bar.
+// Active: iris text + a glowing iris field + border, and a glowing left accent bar.
 .shell__nav-link--active {
   color: var(--primary);
-  background-color: var(--tf-accent-soft);
+  font-weight: 600;
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--primary) 16%, transparent),
+    color-mix(in srgb, var(--primary) 7%, transparent)
+  );
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--primary) 14%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .shell__nav-link--active::before {
   content: '';
   position: absolute;
-  left: -8px;
+  left: -12px;
   top: 50%;
   transform: translateY(-50%);
   width: 3px;
   height: 24px;
   border-radius: 0 3px 3px 0;
   background-color: var(--primary);
-}
-
-.shell__wordmark:focus-visible,
-.shell__nav-link:focus-visible {
-  outline: 2px solid var(--tf-ring);
-  outline-offset: 2px;
+  box-shadow: 0 0 10px var(--primary);
 }
 
 .shell__content {
@@ -182,6 +310,23 @@
 }
 
 @media (max-width: 599px) {
+  // The search pill collapses to an icon-only trigger to keep the bar tidy.
+  .shell__search {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .shell__search-text,
+  .shell__search-kbd {
+    display: none;
+  }
+
+  // The name collapses; the avatar chip stays.
+  .shell__user-name {
+    display: none;
+  }
+
   // Bottom navigation instead of a rail (DESIGN §4).
   .shell__body {
     flex-direction: column-reverse;
@@ -193,7 +338,12 @@
     width: auto;
     padding: 6px 8px;
     border-right: none;
-    border-top: 1px solid var(--tf-hairline);
+    border-top: 1px solid color-mix(in srgb, var(--primary) 10%, var(--border));
+    background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--primary) 4%, transparent),
+      transparent 120px
+    );
   }
 
   .shell__nav-link {
@@ -203,7 +353,7 @@
 
   .shell__nav-link--active::before {
     left: 50%;
-    top: -6px;
+    top: -7px;
     transform: translateX(-50%);
     width: 24px;
     height: 3px;

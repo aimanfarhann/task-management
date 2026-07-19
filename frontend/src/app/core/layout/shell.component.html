@@ -5,12 +5,23 @@
       <span class="shell__mark" aria-hidden="true"></span>
       <span class="shell__wordmark-text tf-display">TaskFlow</span>
     </a>
-    <span class="shell__spacer"></span>
+
     <button
-      hlmBtn
-      variant="ghost"
-      size="icon"
       type="button"
+      class="shell__search"
+      (click)="openCommandPalette()"
+      aria-label="Search projects and pages (Control or Command K)"
+    >
+      <ng-icon name="lucideSearch" size="0.95rem" aria-hidden="true" />
+      <span class="shell__search-text">Search…</span>
+      <kbd class="shell__search-kbd tf-mono">⌘K</kbd>
+    </button>
+
+    <span class="shell__spacer"></span>
+
+    <button
+      type="button"
+      class="shell__icon-pill"
       (click)="themeStore.toggleTheme()"
       [attr.aria-label]="
         themeStore.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
@@ -18,19 +29,25 @@
     >
       <ng-icon
         [name]="themeStore.theme() === 'dark' ? 'lucideSun' : 'lucideMoon'"
-        size="1.15rem"
+        size="1.125rem"
         aria-hidden="true"
       />
     </button>
+
     <button
-      hlmBtn
-      variant="ghost"
       type="button"
-      class="shell__user-button"
+      class="shell__user-chip"
       [cdkMenuTriggerFor]="userMenu"
+      aria-label="Account menu"
     >
-      <ng-icon name="lucideCircleUserRound" size="1.15rem" aria-hidden="true" />
+      <span class="shell__avatar tf-mono" aria-hidden="true">{{ initials() }}</span>
       <span class="shell__user-name">{{ authStore.currentUser()?.displayName }}</span>
+      <ng-icon
+        name="lucideChevronDown"
+        size="0.875rem"
+        class="shell__user-caret"
+        aria-hidden="true"
+      />
     </button>
     <ng-template #userMenu>
       <div class="tf-menu" cdkMenu>
