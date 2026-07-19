@@ -1,19 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { firstValueFrom } from 'rxjs';
+import { NgIcon } from '@ng-icons/core';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { toApiErrorBody } from '../../core/api/api-error';
 import { AdminUserDto, ApiErrorBody } from '../../core/api/models';
 import { AuthStore } from '../../core/auth/auth.store';
 import { NotificationService } from '../../core/ui/notification.service';
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../shared/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '../../shared/confirm-dialog/confirmation.service';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/skeleton/skeleton.component';
 import { AdminStore } from './admin.store';
@@ -29,33 +22,17 @@ const CANNOT_DEACTIVATE_SELF_MESSAGE = 'You cannot deactivate your own account.'
  */
 @Component({
   selector: 'tf-admin-users-page',
-  imports: [
-    DatePipe,
-    MatButtonModule,
-    MatChipsModule,
-    MatIconModule,
-    MatTableModule,
-    EmptyStateComponent,
-    SkeletonComponent,
-  ],
+  imports: [DatePipe, NgIcon, HlmButton, EmptyStateComponent, SkeletonComponent],
   templateUrl: './admin-users-page.component.html',
   styleUrl: './admin-users-page.component.scss',
 })
 export class AdminUsersPageComponent implements OnInit {
   protected readonly adminStore = inject(AdminStore);
   private readonly authStore = inject(AuthStore);
-  private readonly dialog = inject(MatDialog);
+  private readonly confirmation = inject(ConfirmationService);
   private readonly notificationService = inject(NotificationService);
 
   protected readonly skeletonSlots = [0, 1, 2, 3, 4];
-  protected readonly displayedColumns = [
-    'email',
-    'displayName',
-    'role',
-    'status',
-    'createdAt',
-    'actions',
-  ];
 
   /** Inline error for activate/deactivate failures (e.g. CANNOT_DEACTIVATE_SELF). */
   protected readonly actionError = signal<string | null>(null);
@@ -86,21 +63,12 @@ export class AdminUsersPageComponent implements OnInit {
 
   protected async toggleActive(user: AdminUserDto): Promise<void> {
     if (user.active) {
-      const confirmed = await firstValueFrom(
-        this.dialog
-          .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(ConfirmDialogComponent, {
-            data: {
-              title: 'Deactivate user?',
-              message: `${user.displayName} will be signed out and blocked from signing in until reactivated.`,
-              confirmLabel: 'Deactivate',
-              destructive: true,
-            },
-            width: '360px',
-            role: 'alertdialog',
-            ariaDescribedBy: 'tf-confirm-message',
-          })
-          .afterClosed(),
-      );
+      const confirmed = await this.confirmation.confirm({
+        title: 'Deactivate user?',
+        message: `${user.displayName} will be signed out and blocked from signing in until reactivated.`,
+        confirmLabel: 'Deactivate',
+        destructive: true,
+      });
       if (!confirmed) {
         return;
       }

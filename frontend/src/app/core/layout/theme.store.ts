@@ -8,8 +8,8 @@ const THEME_STORAGE_KEY = 'taskflow.theme';
 /**
  * Signal store for the color scheme (DESIGN.md §2). The "Focus" direction is
  * dark-first, so dark is the default; an explicit choice is persisted in
- * localStorage. The light scheme is applied as the .tf-light class on <html>,
- * which re-emits the light Material color tokens in styles.scss.
+ * localStorage. Dark is applied as the `.dark` class on <html> (the light
+ * scheme is the token default in tailwind.css); an explicit choice is persisted.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeStore {
@@ -38,10 +38,7 @@ export class ThemeStore {
   }
 
   private applyTheme(theme: ThemePreference): void {
-    // Dark-first. `.dark` drives the spartan/Tailwind tokens; `.tf-light` drives
-    // the legacy Material tokens (kept in sync during the migration).
-    const root = this.document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    root.classList.toggle('tf-light', theme === 'light');
+    // Dark-first: `.dark` drives the dark token set; its absence is the light default.
+    this.document.documentElement.classList.toggle('dark', theme === 'dark');
   }
 }

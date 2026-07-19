@@ -7,15 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <script>
-      // Apply the light scheme before Angular boots to avoid a flash (DESIGN §2). The app is
-      // dark-first (base = dark); mirrors ThemeStore.resolveInitialTheme: only an explicit
-      // 'light' choice opts into light. Anything else stays on the default dark scheme.
+      // Apply the dark scheme before Angular boots to avoid a flash (DESIGN §2). The app is
+      // dark-first; mirrors ThemeStore.resolveInitialTheme: only an explicit 'light' choice
+      // opts out (light is the token default), everything else gets the .dark class.
       (function () {
         var root = document.documentElement;
         try {
-          if (localStorage.getItem('taskflow.theme') === 'light') {
-            root.classList.add('tf-light');
-          } else {
+          if (localStorage.getItem('taskflow.theme') !== 'light') {
             root.classList.add('dark');
           }
         } catch (error) {

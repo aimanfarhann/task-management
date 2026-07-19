@@ -1,53 +1,59 @@
-<h2 mat-dialog-title>{{ project ? 'Edit project' : 'Create project' }}</h2>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-dialog-content class="dialog-form">
-    @if (errorMessage(); as message) {
-      <p class="dialog-form__error" role="alert">{{ message }}</p>
-    }
-
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" maxlength="120" />
-      @if (form.controls.name.hasError('required')) {
-        <mat-error>Name is required.</mat-error>
-      } @else if (form.controls.name.hasError('maxlength')) {
-        <mat-error>Name must be 120 characters or fewer.</mat-error>
-      } @else if (form.controls.name.hasError('server')) {
-        <mat-error>{{ form.controls.name.getError('server') }}</mat-error>
+<div class="tf-dialog flex max-h-[85vh] w-full flex-col">
+  <h2 class="tf-display shrink-0 px-6 pt-6 text-lg">
+    {{ project ? 'Edit project' : 'Create project' }}
+  </h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex min-h-0 flex-1 flex-col">
+    <div class="flex flex-col gap-4 overflow-y-auto px-6 py-5">
+      @if (errorMessage(); as message) {
+        <p
+          role="alert"
+          class="rounded-md border border-destructive/40 bg-destructive/10 px-3.5 py-3 text-sm text-destructive"
+        >
+          {{ message }}
+        </p>
       }
-    </mat-form-field>
 
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description" rows="3"></textarea>
-      @if (form.controls.description.hasError('server')) {
-        <mat-error>{{ form.controls.description.getError('server') }}</mat-error>
-      }
-    </mat-form-field>
-
-    <div class="dialog-form__colors">
-      <span class="dialog-form__colors-label" id="colorTagLabel">Color</span>
-      <mat-radio-group
-        formControlName="colorTag"
-        class="color-picker"
-        aria-labelledby="colorTagLabel"
-      >
-        @for (tag of colorTags; track tag) {
-          <mat-radio-button [value]="tag">
-            <span class="color-picker__label">
-              <tf-color-dot [colorTag]="tag" />
-              {{ tag }}
-            </span>
-          </mat-radio-button>
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="pf-name">Name</label>
+        <input hlmInput id="pf-name" formControlName="name" maxlength="120" />
+        @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+          <p class="text-xs text-destructive">Name is required.</p>
+        } @else if (form.controls.name.touched && form.controls.name.hasError('maxlength')) {
+          <p class="text-xs text-destructive">Name must be 120 characters or fewer.</p>
+        } @else if (form.controls.name.hasError('server')) {
+          <p class="text-xs text-destructive">{{ form.controls.name.getError('server') }}</p>
         }
-      </mat-radio-group>
-    </div>
-  </mat-dialog-content>
+      </div>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" [mat-dialog-close]="undefined">Cancel</button>
-    <button mat-flat-button type="submit" [disabled]="submitting()">
-      {{ submitting() ? 'Saving…' : project ? 'Save changes' : 'Create project' }}
-    </button>
-  </mat-dialog-actions>
-</form>
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="pf-description">Description</label>
+        <textarea hlmTextarea id="pf-description" formControlName="description" rows="3"></textarea>
+        @if (form.controls.description.hasError('server')) {
+          <p class="text-xs text-destructive">
+            {{ form.controls.description.getError('server') }}
+          </p>
+        }
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <span class="tf-eyebrow" id="pf-color-label">Color</span>
+        <div class="color-picker" role="radiogroup" aria-labelledby="pf-color-label">
+          @for (tag of colorTags; track tag) {
+            <label class="color-picker__option">
+              <input type="radio" class="sr-only" formControlName="colorTag" [value]="tag" />
+              <tf-color-dot [colorTag]="tag" />
+              <span class="color-picker__label">{{ tag }}</span>
+            </label>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="flex shrink-0 justify-end gap-2 border-t border-border px-6 py-4">
+      <button hlmBtn variant="ghost" type="button" (click)="cancel()">Cancel</button>
+      <button hlmBtn type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Saving…' : project ? 'Save changes' : 'Create project' }}
+      </button>
+    </div>
+  </form>
+</div>

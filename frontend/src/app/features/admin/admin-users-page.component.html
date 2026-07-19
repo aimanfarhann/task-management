@@ -12,97 +12,82 @@
   } @else if (adminStore.error(); as message) {
     <div role="alert">
       <tf-empty-state
-        icon="error_outline"
+        icon="lucideCircleAlert"
         [message]="message"
         actionLabel="Retry"
         (action)="reload()"
       />
     </div>
   } @else if (adminStore.users().length === 0) {
-    <tf-empty-state icon="group_off" message="No users to show." />
+    <tf-empty-state icon="lucideUserX" message="No users to show." />
   } @else {
     @if (actionError(); as message) {
       <p class="admin-users__error" role="alert">{{ message }}</p>
     }
 
     <div class="admin-users__table-wrapper">
-      <table
-        mat-table
-        [dataSource]="adminStore.users()"
-        class="admin-users__table"
-        aria-label="All TaskFlow users"
-      >
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef scope="col">Email</th>
-          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="displayName">
-          <th mat-header-cell *matHeaderCellDef scope="col">Name</th>
-          <td mat-cell *matCellDef="let user">{{ user.displayName }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef scope="col">Role</th>
-          <td mat-cell *matCellDef="let user">
-            <mat-chip-set>
-              <mat-chip
-                class="admin-users__role"
-                [class.admin-users__role--admin]="user.role === 'ADMIN'"
-              >
-                {{ roleLabel(user) }}
-              </mat-chip>
-            </mat-chip-set>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef scope="col">Status</th>
-          <td mat-cell *matCellDef="let user">
-            <span
-              class="admin-users__status"
-              [class.admin-users__status--active]="user.active"
-              [class.admin-users__status--inactive]="!user.active"
-            >
-              <mat-icon class="tf-icon-sm" aria-hidden="true">
-                {{ user.active ? 'check_circle' : 'cancel' }}
-              </mat-icon>
-              {{ user.active ? 'Active' : 'Deactivated' }}
-            </span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="createdAt">
-          <th mat-header-cell *matHeaderCellDef scope="col">Joined</th>
-          <td mat-cell *matCellDef="let user">{{ user.createdAt | date: 'mediumDate' }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef scope="col">
-            <span class="cdk-visually-hidden">Actions</span>
-          </th>
-          <td mat-cell *matCellDef="let user">
-            @if (isSelf(user)) {
-              <!-- No self-action (admins cannot lock themselves out). Shown as visible, keyboard-
-                   and screen-reader-reachable text rather than a disabled button (DESIGN §8/§9). -->
-              <span class="admin-users__self-note">Your account</span>
-            } @else {
-              <button
-                mat-stroked-button
-                type="button"
-                class="admin-users__action"
-                (click)="toggleActive(user)"
-                [disabled]="pendingUserId() === user.id"
-                [attr.aria-label]="actionLabel(user)"
-              >
-                {{ user.active ? 'Deactivate' : 'Reactivate' }}
-              </button>
-            }
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <table class="admin-users__table" aria-label="All TaskFlow users">
+        <thead>
+          <tr>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Joined</th>
+            <th scope="col"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of adminStore.users(); track user.id) {
+            <tr>
+              <td>{{ user.email }}</td>
+              <td>{{ user.displayName }}</td>
+              <td>
+                <span
+                  class="admin-users__role"
+                  [class.admin-users__role--admin]="user.role === 'ADMIN'"
+                >
+                  {{ roleLabel(user) }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="admin-users__status"
+                  [class.admin-users__status--active]="user.active"
+                  [class.admin-users__status--inactive]="!user.active"
+                >
+                  <ng-icon
+                    [name]="user.active ? 'lucideCircleCheck' : 'lucideCircleX'"
+                    size="1.05rem"
+                    aria-hidden="true"
+                  />
+                  {{ user.active ? 'Active' : 'Deactivated' }}
+                </span>
+              </td>
+              <td class="admin-users__joined">{{ user.createdAt | date: 'mediumDate' }}</td>
+              <td>
+                @if (isSelf(user)) {
+                  <!-- No self-action (admins cannot lock themselves out). Shown as visible, keyboard-
+                       and screen-reader-reachable text rather than a disabled button (DESIGN §8/§9). -->
+                  <span class="admin-users__self-note">Your account</span>
+                } @else {
+                  <button
+                    hlmBtn
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    class="admin-users__action"
+                    (click)="toggleActive(user)"
+                    [disabled]="pendingUserId() === user.id"
+                    [attr.aria-label]="actionLabel(user)"
+                  >
+                    {{ user.active ? 'Deactivate' : 'Reactivate' }}
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
       </table>
     </div>
   }

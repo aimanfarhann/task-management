@@ -1,4 +1,5 @@
 import {
+  lucideArchive,
   lucideArrowLeft,
   lucideCalendar,
   lucideCalendarDays,
@@ -10,6 +11,7 @@ import {
   lucideCircleCheck,
   lucideCircleHelp,
   lucideCircleUserRound,
+  lucideCircleX,
   lucideColumns3,
   lucideEllipsisVertical,
   lucideEqual,
@@ -43,6 +45,7 @@ import {
  * listed here before any template can use it. Keyed by its Lucide export name.
  */
 export const appIcons = {
+  lucideArchive,
   lucideArrowLeft,
   lucideCalendar,
   lucideCalendarDays,
@@ -54,6 +57,7 @@ export const appIcons = {
   lucideCircleCheck,
   lucideCircleHelp,
   lucideCircleUserRound,
+  lucideCircleX,
   lucideColumns3,
   lucideEllipsisVertical,
   lucideEqual,

@@ -5,8 +5,8 @@
   flex-direction: column;
   gap: 10px;
   padding: 14px 16px;
-  border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface-container-low);
+  border-radius: 14px;
+  background-color: var(--card);
   border: 1px solid var(--tf-hairline);
   box-shadow: var(--tf-shadow-1);
   cursor: grab;
@@ -16,8 +16,8 @@
 }
 
 .task-card:hover {
-  background-color: var(--mat-sys-surface-container);
-  border-color: var(--mat-sys-outline);
+  background-color: var(--secondary);
+  border-color: var(--tf-border-strong);
 }
 
 // While the pointer is actively dragging the card.
@@ -40,27 +40,28 @@
   background: none;
   text-align: left;
   cursor: pointer;
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-title-medium);
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   transition: color 120ms ease;
 }
 
 .task-card__title:hover {
-  color: var(--mat-sys-primary);
+  color: var(--primary);
 }
 
 .task-card__title:focus-visible {
   outline: 2px solid var(--tf-ring);
   outline-offset: 3px;
-  border-radius: var(--mat-sys-corner-extra-small);
+  border-radius: 4px;
 }
 
 .task-card__menu-button {
   flex-shrink: 0;
   margin: -6px -8px 0 0;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
 }
 
 .task-card__meta {
@@ -75,7 +76,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
   font-size: 11px;
   font-weight: 500;
 }
@@ -87,7 +88,7 @@
   font-weight: 600;
 }
 
-.task-card__due--overdue mat-icon {
+.task-card__due--overdue ng-icon {
   color: var(--tf-priority-high);
 }
 
@@ -95,12 +96,13 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-small);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
-.task-card__assignee mat-icon {
-  color: var(--mat-sys-on-surface-variant);
+.task-card__assignee ng-icon {
+  color: var(--muted-foreground);
 }
 
 // Drop target: while this card is the CDK placeholder, ghost its content and
@@ -108,7 +110,7 @@
 // The class lands on the tf-task-card host, so :host reaches it in-scope.
 :host(.cdk-drag-placeholder) .task-card {
   background-color: var(--tf-accent-soft);
-  border: 1px dashed color-mix(in srgb, var(--mat-sys-primary) 55%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--primary) 55%, transparent);
   box-shadow: none;
 }
 

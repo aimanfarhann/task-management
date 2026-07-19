@@ -1,10 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmLabel } from '@spartan-ng/helm/label';
 import { applyFieldErrors, toApiErrorBody } from '../../core/api/api-error';
 import { MemberDto, ProjectRole } from '../../core/api/models';
 import { ProjectStore } from './project.store';
@@ -16,23 +15,14 @@ export interface AddMemberDialogData {
 /** Add-member-by-email dialog; closes with the created MemberDto on success. */
 @Component({
   selector: 'tf-add-member-dialog',
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
+  imports: [ReactiveFormsModule, HlmButton, HlmInput, HlmLabel],
   templateUrl: './add-member-dialog.component.html',
-  styleUrl: './add-member-dialog.component.scss',
 })
 export class AddMemberDialogComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly projectStore = inject(ProjectStore);
-  private readonly dialogRef =
-    inject<MatDialogRef<AddMemberDialogComponent, MemberDto>>(MatDialogRef);
-  private readonly data = inject<AddMemberDialogData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject<DialogRef<MemberDto>>(DialogRef);
+  private readonly data = inject<AddMemberDialogData>(DIALOG_DATA);
 
   protected readonly submitting = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
@@ -41,6 +31,10 @@ export class AddMemberDialogComponent {
     email: ['', [Validators.required, Validators.email]],
     projectRole: this.formBuilder.control<ProjectRole>('MEMBER', Validators.required),
   });
+
+  protected cancel(): void {
+    this.dialogRef.close();
+  }
 
   protected async submit(): Promise<void> {
     if (this.form.invalid) {

@@ -1,14 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmLabel } from '@spartan-ng/helm/label';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { applyFieldErrors, toApiErrorBody } from '../../core/api/api-error';
 import { MemberDto, TaskDto, TaskPriority, TaskStatus } from '../../core/api/models';
-import { fromIsoDate, toIsoDate } from '../../shared/due-date.util';
 import { TaskStore } from './task.store';
 
 export interface TaskFormDialogData {
@@ -20,27 +18,19 @@ export interface TaskFormDialogData {
 /**
  * Create/edit task dialog. Dialog data carries the project, its members (for
  * the assignee select) and the task to edit, or null to create. Closes with
- * the saved TaskDto on success.
+ * the saved TaskDto on success. The due date is a native date input, so its
+ * control value is already an ISO `yyyy-MM-dd` string (or '' when unset).
  */
 @Component({
   selector: 'tf-task-form-dialog',
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
+  imports: [ReactiveFormsModule, HlmButton, HlmInput, HlmLabel, HlmTextarea],
   templateUrl: './task-form-dialog.component.html',
-  styleUrl: './task-form-dialog.component.scss',
 })
 export class TaskFormDialogComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly taskStore = inject(TaskStore);
-  private readonly dialogRef = inject<MatDialogRef<TaskFormDialogComponent, TaskDto>>(MatDialogRef);
-  private readonly data = inject<TaskFormDialogData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject<DialogRef<TaskDto>>(DialogRef);
+  private readonly data = inject<TaskFormDialogData>(DIALOG_DATA);
 
   protected readonly members = this.data.members;
   protected readonly isEdit = this.data.task !== null;
@@ -55,9 +45,13 @@ export class TaskFormDialogComponent {
       this.data.task?.priority ?? 'MEDIUM',
       Validators.required,
     ),
-    dueDate: this.formBuilder.control<Date | null>(fromIsoDate(this.data.task?.dueDate ?? null)),
+    dueDate: [this.data.task?.dueDate ?? ''],
     assigneeId: this.formBuilder.control<number | null>(this.data.task?.assignee?.userId ?? null),
   });
+
+  protected cancel(): void {
+    this.dialogRef.close();
+  }
 
   protected async submit(): Promise<void> {
     this.form.controls.title.setValue(this.form.controls.title.value.trim());
@@ -69,7 +63,7 @@ export class TaskFormDialogComponent {
     this.errorMessage.set(null);
     const raw = this.form.getRawValue();
     const description = raw.description.trim() === '' ? null : raw.description.trim();
-    const dueDate = raw.dueDate ? toIsoDate(raw.dueDate) : null;
+    const dueDate = raw.dueDate === '' ? null : raw.dueDate;
     try {
       const saved = this.data.task
         ? await this.taskStore.updateTask(this.data.projectId, this.data.task.id, {

@@ -5,10 +5,11 @@
 // Page title in the display voice (DESIGN §3).
 .page-header__title {
   margin: 0;
-  font: var(--mat-sys-headline-small);
-  font-family: var(--tf-font-display);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.015em;
+  color: var(--foreground);
 }
 
 .admin-users__skeleton {
@@ -20,80 +21,99 @@
 .admin-users__error {
   margin: 0 0 16px;
   padding: 12px 14px;
-  border-radius: var(--mat-sys-corner-medium);
-  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
-  background-color: var(--mat-sys-error-container);
-  color: var(--mat-sys-on-error-container);
-  font: var(--mat-sys-body-small);
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--destructive) 40%, transparent);
+  background-color: color-mix(in srgb, var(--destructive) 12%, transparent);
+  color: var(--destructive);
+  font-size: 0.8125rem;
 }
 
 // --- Table: a single hairline surface with a tonal header + row rhythm -----
 .admin-users__table-wrapper {
   overflow-x: auto;
-  background-color: var(--mat-sys-surface-container-low);
+  background-color: var(--card);
   border: 1px solid var(--tf-hairline);
-  border-radius: var(--mat-sys-corner-large);
+  border-radius: 14px;
   box-shadow: var(--tf-shadow-1);
 }
 
 .admin-users__table {
   width: 100%;
+  border-collapse: collapse;
   background: transparent;
-
-  .mat-mdc-header-row {
-    background-color: var(--mat-sys-surface-container);
-  }
-
-  .mat-mdc-header-cell {
-    font-family: var(--tf-font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--mat-sys-on-surface-variant);
-    border-bottom-color: var(--tf-hairline);
-  }
-
-  .mat-mdc-row {
-    transition: background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  .mat-mdc-row:hover {
-    background-color: var(--mat-sys-surface-container-high);
-  }
-
-  .mat-mdc-cell {
-    border-bottom-color: var(--tf-hairline);
-    color: var(--mat-sys-on-surface);
-  }
-
-  .mat-mdc-row:last-of-type .mat-mdc-cell {
-    border-bottom: none;
-  }
-
-  // Joined date speaks in the mono metadata voice (data cell only, so the header
-  // keeps its eyebrow tracking — the .mat-column-* class lands on th too).
-  td.mat-column-createdAt {
-    font-family: var(--tf-font-mono);
-    font-feature-settings: 'tnum' 1;
-    letter-spacing: -0.01em;
-    color: var(--mat-sys-on-surface-variant);
-    white-space: nowrap;
-  }
 }
 
-// ADMIN chips use the secondary-container role so the elevated role reads at a
-// glance; the text label carries the meaning regardless of color (DESIGN §8).
+.admin-users__table thead tr {
+  background-color: var(--secondary);
+}
+
+.admin-users__table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--tf-hairline);
+  white-space: nowrap;
+}
+
+.admin-users__table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--tf-hairline);
+  color: var(--foreground);
+  vertical-align: middle;
+}
+
+.admin-users__table tbody tr {
+  transition: background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.admin-users__table tbody tr:hover {
+  background-color: var(--accent);
+}
+
+.admin-users__table tbody tr:last-of-type td {
+  border-bottom: none;
+}
+
+// Joined date speaks in the mono metadata voice.
+.admin-users__joined {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+// Role pill: icon-free hairline chip; ADMIN uses the accent field so the elevated
+// role reads at a glance, while the text label carries the meaning (DESIGN §8).
+.admin-users__role {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--tf-hairline);
+  background-color: var(--secondary);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
 .admin-users__role--admin {
-  --mdc-chip-elevated-container-color: var(--mat-sys-secondary-container);
-  --mdc-chip-label-text-color: var(--mat-sys-on-secondary-container);
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  background-color: var(--tf-accent-soft);
+  color: var(--primary);
 }
 
 .admin-users__status {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font: var(--mat-sys-label-large);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 // Status is conveyed by icon + text label; color is only a supplement (DESIGN §8).
@@ -102,16 +122,16 @@
 }
 
 .admin-users__status--inactive {
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
 }
 
 .admin-users__self-note {
   // Visible, screen-reader-reachable text replacing a disabled self-action button (DESIGN §8/§9).
   // Mono voice signals it's a system note, not an action.
-  font: var(--mat-sys-body-small);
-  font-family: var(--tf-font-mono);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
   letter-spacing: -0.01em;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
 }
 
 .admin-users__action {

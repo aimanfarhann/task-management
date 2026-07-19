@@ -1,138 +1,197 @@
 <div class="task-list">
   <div class="task-list__filters" role="group" aria-label="Filter tasks">
-    <mat-form-field class="task-list__filter" appearance="outline">
-      <mat-label>Status</mat-label>
-      <mat-select [value]="statusFilter()" (selectionChange)="statusFilter.set($event.value)">
-        <mat-option value="ALL">All statuses</mat-option>
+    <div class="task-list__filter">
+      <label hlmLabel for="tl-status">Status</label>
+      <select
+        class="tf-select"
+        id="tl-status"
+        [value]="statusFilter()"
+        (change)="setStatusFilter($any($event.target).value)"
+      >
+        <option value="ALL">All statuses</option>
         @for (option of statusOptions; track option.status) {
-          <mat-option [value]="option.status">{{ option.label }}</mat-option>
+          <option [value]="option.status">{{ option.label }}</option>
         }
-      </mat-select>
-    </mat-form-field>
+      </select>
+    </div>
 
-    <mat-form-field class="task-list__filter" appearance="outline">
-      <mat-label>Priority</mat-label>
-      <mat-select [value]="priorityFilter()" (selectionChange)="priorityFilter.set($event.value)">
-        <mat-option value="ALL">All priorities</mat-option>
-        <mat-option value="HIGH">High</mat-option>
-        <mat-option value="MEDIUM">Medium</mat-option>
-        <mat-option value="LOW">Low</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="task-list__filter">
+      <label hlmLabel for="tl-priority">Priority</label>
+      <select
+        class="tf-select"
+        id="tl-priority"
+        [value]="priorityFilter()"
+        (change)="setPriorityFilter($any($event.target).value)"
+      >
+        <option value="ALL">All priorities</option>
+        <option value="HIGH">High</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LOW">Low</option>
+      </select>
+    </div>
 
-    <mat-form-field class="task-list__filter" appearance="outline">
-      <mat-label>Assignee</mat-label>
-      <mat-select [value]="assigneeFilter()" (selectionChange)="assigneeFilter.set($event.value)">
-        <mat-option value="ALL">Anyone</mat-option>
-        <mat-option value="UNASSIGNED">Unassigned</mat-option>
+    <div class="task-list__filter">
+      <label hlmLabel for="tl-assignee">Assignee</label>
+      <select
+        class="tf-select"
+        id="tl-assignee"
+        [value]="assigneeFilter()"
+        (change)="setAssigneeFilter($any($event.target).value)"
+      >
+        <option value="ALL">Anyone</option>
+        <option value="UNASSIGNED">Unassigned</option>
         @for (member of members(); track member.userId) {
-          <mat-option [value]="member.userId">{{ member.displayName }}</mat-option>
+          <option [value]="member.userId">{{ member.displayName }}</option>
         }
-      </mat-select>
-    </mat-form-field>
+      </select>
+    </div>
   </div>
 
   @if (rows().length === 0) {
     <p class="task-list__empty">No tasks match these filters.</p>
   } @else {
     <div class="task-list__table-wrapper">
-      <table
-        mat-table
-        [dataSource]="rows()"
-        matSort
-        (matSortChange)="onSortChange($event)"
-        class="task-list__table"
-        aria-label="Project tasks"
-      >
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-          <td mat-cell *matCellDef="let task">
-            <button type="button" class="task-list__title" (click)="openTask.emit(task)">
-              {{ task.title }}
-            </button>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let task"><tf-status-chip [status]="task.status" /></td>
-        </ng-container>
-
-        <ng-container matColumnDef="priority">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>
-          <td mat-cell *matCellDef="let task"><tf-priority-badge [priority]="task.priority" /></td>
-        </ng-container>
-
-        <ng-container matColumnDef="assignee">
-          <th mat-header-cell *matHeaderCellDef>Assignee</th>
-          <td mat-cell *matCellDef="let task">
-            {{ task.assignee?.displayName ?? 'Unassigned' }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="dueDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Due</th>
-          <td mat-cell *matCellDef="let task">
-            @if (task.dueDate) {
-              <span [class.task-list__due--overdue]="isOverdue(task)">
-                {{ task.dueDate | tfDueDate }}
-                @if (isOverdue(task)) {
-                  <span class="cdk-visually-hidden">(overdue)</span>
+      <table class="task-list__table" aria-label="Project tasks">
+        <thead>
+          <tr>
+            <th scope="col" [attr.aria-sort]="ariaSort('title')">
+              <button type="button" class="task-list__sort" (click)="toggleSort('title')">
+                Title
+                @if (sort().active === 'title') {
+                  <ng-icon
+                    name="lucideChevronDown"
+                    size="0.8125rem"
+                    [class.rotate-180]="sort().direction === 'asc'"
+                    aria-hidden="true"
+                  />
                 }
-              </span>
-            } @else {
-              <span class="task-list__muted">—</span>
-            }
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="createdAt">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
-          <td mat-cell *matCellDef="let task">{{ task.createdAt | date: 'mediumDate' }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>
-            <span class="cdk-visually-hidden">Actions</span>
-          </th>
-          <td mat-cell *matCellDef="let task">
-            <button
-              mat-icon-button
-              type="button"
-              [matMenuTriggerFor]="rowMenu"
-              [attr.aria-label]="'Actions for ' + task.title"
-            >
-              <mat-icon aria-hidden="true">more_vert</mat-icon>
-            </button>
-            <mat-menu #rowMenu="matMenu">
-              <button mat-menu-item type="button" (click)="openTask.emit(task)">
-                <mat-icon aria-hidden="true">open_in_full</mat-icon>
-                <span>View details</span>
               </button>
-              <button mat-menu-item type="button" (click)="editTask.emit(task)">
-                <mat-icon aria-hidden="true">edit</mat-icon>
-                <span>Edit</span>
+            </th>
+            <th scope="col">Status</th>
+            <th scope="col" [attr.aria-sort]="ariaSort('priority')">
+              <button type="button" class="task-list__sort" (click)="toggleSort('priority')">
+                Priority
+                @if (sort().active === 'priority') {
+                  <ng-icon
+                    name="lucideChevronDown"
+                    size="0.8125rem"
+                    [class.rotate-180]="sort().direction === 'asc'"
+                    aria-hidden="true"
+                  />
+                }
               </button>
-              @for (option of moveOptionsFor(task); track option.status) {
-                <button
-                  mat-menu-item
-                  type="button"
-                  (click)="moveTask.emit({ task, status: option.status })"
-                >
-                  <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
-                  <span>Move to {{ option.label }}</span>
+            </th>
+            <th scope="col">Assignee</th>
+            <th scope="col" [attr.aria-sort]="ariaSort('dueDate')">
+              <button type="button" class="task-list__sort" (click)="toggleSort('dueDate')">
+                Due
+                @if (sort().active === 'dueDate') {
+                  <ng-icon
+                    name="lucideChevronDown"
+                    size="0.8125rem"
+                    [class.rotate-180]="sort().direction === 'asc'"
+                    aria-hidden="true"
+                  />
+                }
+              </button>
+            </th>
+            <th scope="col" [attr.aria-sort]="ariaSort('createdAt')">
+              <button type="button" class="task-list__sort" (click)="toggleSort('createdAt')">
+                Created
+                @if (sort().active === 'createdAt') {
+                  <ng-icon
+                    name="lucideChevronDown"
+                    size="0.8125rem"
+                    [class.rotate-180]="sort().direction === 'asc'"
+                    aria-hidden="true"
+                  />
+                }
+              </button>
+            </th>
+            <th scope="col"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (task of rows(); track task.id) {
+            <tr>
+              <td>
+                <button type="button" class="task-list__title" (click)="openTask.emit(task)">
+                  {{ task.title }}
                 </button>
-              }
-              <button mat-menu-item type="button" (click)="removeTask.emit(task)">
-                <mat-icon aria-hidden="true">delete</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </td>
+              <td><tf-status-chip [status]="task.status" /></td>
+              <td><tf-priority-badge [priority]="task.priority" /></td>
+              <td>{{ task.assignee?.displayName ?? 'Unassigned' }}</td>
+              <td class="task-list__cell-mono">
+                @if (task.dueDate) {
+                  <span [class.task-list__due--overdue]="isOverdue(task)">
+                    {{ task.dueDate | tfDueDate }}
+                    @if (isOverdue(task)) {
+                      <span class="sr-only">(overdue)</span>
+                    }
+                  </span>
+                } @else {
+                  <span class="task-list__muted">—</span>
+                }
+              </td>
+              <td class="task-list__cell-mono">{{ task.createdAt | date: 'mediumDate' }}</td>
+              <td class="task-list__actions-cell">
+                <button
+                  hlmBtn
+                  variant="ghost"
+                  size="icon"
+                  type="button"
+                  [cdkMenuTriggerFor]="rowMenu"
+                  [attr.aria-label]="'Actions for ' + task.title"
+                >
+                  <ng-icon name="lucideEllipsisVertical" size="1.15rem" aria-hidden="true" />
+                </button>
+                <ng-template #rowMenu>
+                  <div class="tf-menu" cdkMenu>
+                    <button
+                      class="tf-menu-item"
+                      type="button"
+                      cdkMenuItem
+                      (cdkMenuItemTriggered)="openTask.emit(task)"
+                    >
+                      <ng-icon name="lucideMaximize2" size="1rem" aria-hidden="true" />
+                      <span>View details</span>
+                    </button>
+                    <button
+                      class="tf-menu-item"
+                      type="button"
+                      cdkMenuItem
+                      (cdkMenuItemTriggered)="editTask.emit(task)"
+                    >
+                      <ng-icon name="lucidePencil" size="1rem" aria-hidden="true" />
+                      <span>Edit</span>
+                    </button>
+                    @for (option of moveOptionsFor(task); track option.status) {
+                      <button
+                        class="tf-menu-item"
+                        type="button"
+                        cdkMenuItem
+                        (cdkMenuItemTriggered)="moveTask.emit({ task, status: option.status })"
+                      >
+                        <ng-icon [name]="option.icon" size="1rem" aria-hidden="true" />
+                        <span>Move to {{ option.label }}</span>
+                      </button>
+                    }
+                    <button
+                      class="tf-menu-item tf-menu-item--danger"
+                      type="button"
+                      cdkMenuItem
+                      (cdkMenuItemTriggered)="removeTask.emit(task)"
+                    >
+                      <ng-icon name="lucideTrash2" size="1rem" aria-hidden="true" />
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                </ng-template>
+              </td>
+            </tr>
+          }
+        </tbody>
       </table>
     </div>
   }

@@ -4,34 +4,48 @@
       {{ task().title }}
     </button>
     <button
-      mat-icon-button
+      hlmBtn
+      variant="ghost"
+      size="icon"
       type="button"
       class="task-card__menu-button"
-      [matMenuTriggerFor]="menu"
+      [cdkMenuTriggerFor]="menu"
       aria-label="Task actions"
     >
-      <mat-icon aria-hidden="true">more_vert</mat-icon>
+      <ng-icon name="lucideEllipsisVertical" size="1.15rem" aria-hidden="true" />
     </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item type="button" (click)="open.emit()">
-        <mat-icon aria-hidden="true">open_in_full</mat-icon>
-        <span>View details</span>
-      </button>
-      <button mat-menu-item type="button" (click)="edit.emit()">
-        <mat-icon aria-hidden="true">edit</mat-icon>
-        <span>Edit</span>
-      </button>
-      @for (option of moveOptions(); track option.status) {
-        <button mat-menu-item type="button" (click)="moveTo.emit(option.status)">
-          <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
-          <span>Move to {{ option.label }}</span>
+    <ng-template #menu>
+      <div class="tf-menu" cdkMenu>
+        <button class="tf-menu-item" type="button" cdkMenuItem (cdkMenuItemTriggered)="open.emit()">
+          <ng-icon name="lucideMaximize2" size="1rem" aria-hidden="true" />
+          <span>View details</span>
         </button>
-      }
-      <button mat-menu-item type="button" (click)="remove.emit()">
-        <mat-icon aria-hidden="true">delete</mat-icon>
-        <span>Delete</span>
-      </button>
-    </mat-menu>
+        <button class="tf-menu-item" type="button" cdkMenuItem (cdkMenuItemTriggered)="edit.emit()">
+          <ng-icon name="lucidePencil" size="1rem" aria-hidden="true" />
+          <span>Edit</span>
+        </button>
+        @for (option of moveOptions(); track option.status) {
+          <button
+            class="tf-menu-item"
+            type="button"
+            cdkMenuItem
+            (cdkMenuItemTriggered)="moveTo.emit(option.status)"
+          >
+            <ng-icon [name]="option.icon" size="1rem" aria-hidden="true" />
+            <span>Move to {{ option.label }}</span>
+          </button>
+        }
+        <button
+          class="tf-menu-item tf-menu-item--danger"
+          type="button"
+          cdkMenuItem
+          (cdkMenuItemTriggered)="remove.emit()"
+        >
+          <ng-icon name="lucideTrash2" size="1rem" aria-hidden="true" />
+          <span>Delete</span>
+        </button>
+      </div>
+    </ng-template>
   </div>
 
   <div class="task-card__meta">
@@ -40,19 +54,19 @@
       <span
         class="task-card__due tf-mono"
         [class.task-card__due--overdue]="overdue()"
-        [matTooltip]="overdue() ? 'Overdue' : ''"
+        [title]="overdue() ? 'Overdue' : null"
       >
-        <mat-icon class="tf-icon-sm" aria-hidden="true">event</mat-icon>
+        <ng-icon name="lucideCalendar" size="0.9375rem" aria-hidden="true" />
         <span>{{ dueDate | tfDueDate }}</span>
         @if (overdue()) {
-          <span class="cdk-visually-hidden">(overdue)</span>
+          <span class="sr-only">(overdue)</span>
         }
       </span>
     }
   </div>
 
   <div class="task-card__assignee">
-    <mat-icon class="tf-icon-sm" aria-hidden="true">person</mat-icon>
+    <ng-icon name="lucideUser" size="0.9375rem" aria-hidden="true" />
     <span>{{ task().assignee?.displayName ?? 'Unassigned' }}</span>
   </div>
 </article>

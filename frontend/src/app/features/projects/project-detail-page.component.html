@@ -7,14 +7,14 @@
     </div>
   } @else if (projectStore.selectedProjectError(); as apiError) {
     <tf-empty-state
-      icon="error_outline"
+      icon="lucideCircleAlert"
       [message]="apiError.message"
       actionLabel="Back to projects"
       (action)="goBack()"
     />
   } @else if (projectStore.selectedProject(); as project) {
-    <a mat-button routerLink="/projects" class="detail-back">
-      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    <a hlmBtn variant="ghost" size="sm" routerLink="/projects" class="detail-back">
+      <ng-icon name="lucideArrowLeft" size="1rem" aria-hidden="true" />
       Projects
     </a>
 
@@ -24,7 +24,7 @@
         <h1 class="detail-header__name">{{ project.name }}</h1>
         @if (project.archived) {
           <span class="tf-badge">
-            <mat-icon aria-hidden="true">inventory_2</mat-icon>
+            <ng-icon name="lucideArchive" size="0.9375rem" aria-hidden="true" />
             Archived
           </span>
         }
@@ -38,17 +38,19 @@
       </p>
       @if (canManage()) {
         <div class="detail-header__actions">
-          <button mat-stroked-button type="button" (click)="openEditDialog()">
-            <mat-icon aria-hidden="true">edit</mat-icon>
+          <button hlmBtn variant="outline" size="sm" type="button" (click)="openEditDialog()">
+            <ng-icon name="lucidePencil" size="1rem" aria-hidden="true" />
             Edit
           </button>
           <button
-            mat-stroked-button
+            hlmBtn
+            variant="outline"
+            size="sm"
             type="button"
             (click)="toggleArchived()"
             [disabled]="archiving()"
           >
-            <mat-icon aria-hidden="true">{{ project.archived ? 'unarchive' : 'archive' }}</mat-icon>
+            <ng-icon name="lucideArchive" size="1rem" aria-hidden="true" />
             {{ archiving() ? 'Saving…' : project.archived ? 'Unarchive' : 'Archive' }}
           </button>
         </div>
@@ -62,23 +64,30 @@
       <div class="tasks__header">
         <h2 id="tasksHeading" class="tasks__title">Tasks</h2>
         <div class="tasks__controls">
-          <mat-button-toggle-group
-            class="tasks__view-toggle"
-            [value]="taskView()"
-            (change)="taskView.set($event.value)"
-            aria-label="Task view"
-          >
-            <mat-button-toggle value="board">
-              <mat-icon aria-hidden="true">view_kanban</mat-icon>
+          <div class="tasks__view-toggle" role="group" aria-label="Task view">
+            <button
+              type="button"
+              class="tasks__view-option"
+              [class.tasks__view-option--active]="taskView() === 'board'"
+              [attr.aria-pressed]="taskView() === 'board'"
+              (click)="taskView.set('board')"
+            >
+              <ng-icon name="lucideColumns3" size="1.05rem" aria-hidden="true" />
               Board
-            </mat-button-toggle>
-            <mat-button-toggle value="list">
-              <mat-icon aria-hidden="true">view_list</mat-icon>
+            </button>
+            <button
+              type="button"
+              class="tasks__view-option"
+              [class.tasks__view-option--active]="taskView() === 'list'"
+              [attr.aria-pressed]="taskView() === 'list'"
+              (click)="taskView.set('list')"
+            >
+              <ng-icon name="lucideList" size="1.05rem" aria-hidden="true" />
               List
-            </mat-button-toggle>
-          </mat-button-toggle-group>
-          <button mat-flat-button type="button" (click)="openCreateTask()">
-            <mat-icon aria-hidden="true">add</mat-icon>
+            </button>
+          </div>
+          <button hlmBtn type="button" (click)="openCreateTask()">
+            <ng-icon name="lucidePlus" size="1rem" aria-hidden="true" />
             New task
           </button>
         </div>
@@ -95,14 +104,14 @@
         </div>
       } @else if (taskStore.error(); as message) {
         <tf-empty-state
-          icon="error_outline"
+          icon="lucideCircleAlert"
           [message]="message"
           actionLabel="Retry"
           (action)="reloadTasks()"
         />
       } @else if (taskStore.tasks().length === 0) {
         <tf-empty-state
-          icon="task_alt"
+          icon="lucideListChecks"
           message="No tasks yet. Create the first task for this project."
           actionLabel="Create task"
           (action)="openCreateTask()"
@@ -132,8 +141,8 @@
           Members ({{ projectStore.members().length }})
         </h2>
         @if (canManage()) {
-          <button mat-flat-button type="button" (click)="openAddMemberDialog()">
-            <mat-icon aria-hidden="true">person_add</mat-icon>
+          <button hlmBtn type="button" (click)="openAddMemberDialog()">
+            <ng-icon name="lucideUserPlus" size="1rem" aria-hidden="true" />
             Add member
           </button>
         }
@@ -144,59 +153,45 @@
       }
 
       <div class="members__table-wrapper">
-        <table
-          mat-table
-          [dataSource]="projectStore.members()"
-          class="members__table"
-          aria-label="Project members"
-        >
-          <ng-container matColumnDef="displayName">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let member">{{ member.displayName }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let member">{{ member.email }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="projectRole">
-            <th mat-header-cell *matHeaderCellDef>Role</th>
-            <td mat-cell *matCellDef="let member">
-              {{ member.projectRole === 'OWNER' ? 'Owner' : 'Member' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="joinedAt">
-            <th mat-header-cell *matHeaderCellDef>Joined</th>
-            <td mat-cell *matCellDef="let member" class="tf-mono members__joined">
-              {{ member.joinedAt | date: 'mediumDate' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>
-              <span class="cdk-visually-hidden">Actions</span>
-            </th>
-            <td mat-cell *matCellDef="let member">
-              @if (canRemove(member)) {
-                <button
-                  mat-icon-button
-                  type="button"
-                  (click)="removeMember(member)"
-                  [attr.aria-label]="removeLabel(member)"
-                  [matTooltip]="removeLabel(member)"
-                >
-                  <mat-icon aria-hidden="true">
-                    {{ isSelf(member) ? 'logout' : 'person_remove' }}
-                  </mat-icon>
-                </button>
-              }
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="memberColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: memberColumns"></tr>
+        <table class="members__table" aria-label="Project members">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
+              <th scope="col">Joined</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (member of projectStore.members(); track member.userId) {
+              <tr>
+                <td>{{ member.displayName }}</td>
+                <td>{{ member.email }}</td>
+                <td>{{ member.projectRole === 'OWNER' ? 'Owner' : 'Member' }}</td>
+                <td class="tf-mono members__joined">{{ member.joinedAt | date: 'mediumDate' }}</td>
+                <td class="members__actions-cell">
+                  @if (canRemove(member)) {
+                    <button
+                      hlmBtn
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      (click)="removeMember(member)"
+                      [attr.aria-label]="removeLabel(member)"
+                      [title]="removeLabel(member)"
+                    >
+                      <ng-icon
+                        [name]="isSelf(member) ? 'lucideLogOut' : 'lucideUserX'"
+                        size="1.15rem"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
         </table>
       </div>
     </section>

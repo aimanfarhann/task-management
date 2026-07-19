@@ -1,24 +1,15 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { firstValueFrom } from 'rxjs';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { NgIcon } from '@ng-icons/core';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmLabel } from '@spartan-ng/helm/label';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { toApiErrorBody } from '../../core/api/api-error';
 import { CommentDto, TaskDto } from '../../core/api/models';
 import { AuthStore } from '../../core/auth/auth.store';
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../shared/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '../../shared/confirm-dialog/confirmation.service';
 import { DueDatePipe } from '../../shared/due-date.pipe';
 import { isPastDue } from '../../shared/due-date.util';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
@@ -45,11 +36,10 @@ export interface TaskDetailDialogData {
   imports: [
     DatePipe,
     ReactiveFormsModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
+    NgIcon,
+    HlmButton,
+    HlmLabel,
+    HlmTextarea,
     DueDatePipe,
     EmptyStateComponent,
     PriorityBadgeComponent,
@@ -62,11 +52,10 @@ export interface TaskDetailDialogData {
 export class TaskDetailDialogComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly authStore = inject(AuthStore);
-  private readonly dialog = inject(MatDialog);
-  private readonly dialogRef =
-    inject<MatDialogRef<TaskDetailDialogComponent, 'edit'>>(MatDialogRef);
+  private readonly confirmation = inject(ConfirmationService);
+  private readonly dialogRef = inject<DialogRef<'edit'>>(DialogRef);
   protected readonly commentStore = inject(CommentStore);
-  protected readonly data = inject<TaskDetailDialogData>(MAT_DIALOG_DATA);
+  protected readonly data = inject<TaskDetailDialogData>(DIALOG_DATA);
 
   protected readonly task = this.data.task;
   protected readonly overdue = isPastDue(this.task.dueDate) && this.task.status !== 'DONE';
@@ -88,6 +77,10 @@ export class TaskDetailDialogComponent {
     return (
       this.data.canModerateComments || comment.author.userId === this.authStore.currentUser()?.id
     );
+  }
+
+  protected close(): void {
+    this.dialogRef.close();
   }
 
   protected requestEdit(): void {
@@ -115,19 +108,12 @@ export class TaskDetailDialogComponent {
   }
 
   protected async deleteComment(comment: CommentDto): Promise<void> {
-    const confirmed = await firstValueFrom(
-      this.dialog
-        .open<ConfirmDialogComponent, ConfirmDialogData, boolean>(ConfirmDialogComponent, {
-          data: {
-            title: 'Delete comment?',
-            message: 'This comment will be permanently removed.',
-            confirmLabel: 'Delete',
-            destructive: true,
-          },
-          width: '360px',
-        })
-        .afterClosed(),
-    );
+    const confirmed = await this.confirmation.confirm({
+      title: 'Delete comment?',
+      message: 'This comment will be permanently removed.',
+      confirmLabel: 'Delete',
+      destructive: true,
+    });
     if (!confirmed) {
       return;
     }

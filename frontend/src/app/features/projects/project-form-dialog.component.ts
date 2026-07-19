@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmLabel } from '@spartan-ng/helm/label';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { applyFieldErrors, toApiErrorBody } from '../../core/api/api-error';
 import { COLOR_TAGS, ColorTag, ProjectDto } from '../../core/api/models';
 import { ColorDotComponent } from '../../shared/color-dot/color-dot.component';
@@ -16,25 +16,16 @@ import { ProjectStore } from './project.store';
  */
 @Component({
   selector: 'tf-project-form-dialog',
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    ColorDotComponent,
-  ],
+  imports: [ReactiveFormsModule, HlmButton, HlmInput, HlmLabel, HlmTextarea, ColorDotComponent],
   templateUrl: './project-form-dialog.component.html',
   styleUrl: './project-form-dialog.component.scss',
 })
 export class ProjectFormDialogComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly projectStore = inject(ProjectStore);
-  private readonly dialogRef =
-    inject<MatDialogRef<ProjectFormDialogComponent, ProjectDto>>(MatDialogRef);
+  private readonly dialogRef = inject<DialogRef<ProjectDto>>(DialogRef);
 
-  protected readonly project = inject<ProjectDto | null>(MAT_DIALOG_DATA);
+  protected readonly project = inject<ProjectDto | null>(DIALOG_DATA);
   protected readonly colorTags = COLOR_TAGS;
   protected readonly submitting = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
@@ -47,6 +38,10 @@ export class ProjectFormDialogComponent {
       Validators.required,
     ),
   });
+
+  protected cancel(): void {
+    this.dialogRef.close();
+  }
 
   protected async submit(): Promise<void> {
     // Normalize the name before validating so a whitespace-only value fails `required` client-side

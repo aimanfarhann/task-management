@@ -16,12 +16,7 @@ import { Component, input } from '@angular/core';
     :host {
       display: block;
       border-radius: 10px;
-      background: linear-gradient(
-        100deg,
-        var(--muted) 30%,
-        var(--secondary) 50%,
-        var(--muted) 70%
-      );
+      background: linear-gradient(100deg, var(--muted) 30%, var(--secondary) 50%, var(--muted) 70%);
       background-size: 200% 100%;
       animation: tf-skeleton-shimmer 1.4s ease-in-out infinite;
     }

@@ -1,78 +1,85 @@
-<h2 mat-dialog-title>{{ isEdit ? 'Edit task' : 'Create task' }}</h2>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-dialog-content class="dialog-form">
-    @if (errorMessage(); as message) {
-      <p class="dialog-form__error" role="alert">{{ message }}</p>
-    }
-
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Title</mat-label>
-      <input matInput formControlName="title" maxlength="200" />
-      @if (form.controls.title.hasError('required')) {
-        <mat-error>Title is required.</mat-error>
-      } @else if (form.controls.title.hasError('maxlength')) {
-        <mat-error>Title must be 200 characters or fewer.</mat-error>
-      } @else if (form.controls.title.hasError('server')) {
-        <mat-error>{{ form.controls.title.getError('server') }}</mat-error>
+<div class="tf-dialog flex max-h-[85vh] w-full flex-col">
+  <h2 class="tf-display shrink-0 px-6 pt-6 text-lg">{{ isEdit ? 'Edit task' : 'Create task' }}</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex min-h-0 flex-1 flex-col">
+    <div class="flex flex-col gap-4 overflow-y-auto px-6 py-5">
+      @if (errorMessage(); as message) {
+        <p
+          role="alert"
+          class="rounded-md border border-destructive/40 bg-destructive/10 px-3.5 py-3 text-sm text-destructive"
+        >
+          {{ message }}
+        </p>
       }
-    </mat-form-field>
 
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description" rows="3"></textarea>
-      @if (form.controls.description.hasError('server')) {
-        <mat-error>{{ form.controls.description.getError('server') }}</mat-error>
-      }
-    </mat-form-field>
-
-    @if (isEdit) {
-      <mat-form-field class="dialog-form__field">
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option value="TODO">To do</mat-option>
-          <mat-option value="IN_PROGRESS">In progress</mat-option>
-          <mat-option value="DONE">Done</mat-option>
-        </mat-select>
-      </mat-form-field>
-    }
-
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Priority</mat-label>
-      <mat-select formControlName="priority">
-        <mat-option value="HIGH">High</mat-option>
-        <mat-option value="MEDIUM">Medium</mat-option>
-        <mat-option value="LOW">Low</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Due date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="dueDate" />
-      <mat-datepicker-toggle matIconSuffix [for]="picker" />
-      <mat-datepicker #picker />
-      @if (form.controls.dueDate.hasError('server')) {
-        <mat-error>{{ form.controls.dueDate.getError('server') }}</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field class="dialog-form__field">
-      <mat-label>Assignee</mat-label>
-      <mat-select formControlName="assigneeId">
-        <mat-option [value]="null">Unassigned</mat-option>
-        @for (member of members; track member.userId) {
-          <mat-option [value]="member.userId">{{ member.displayName }}</mat-option>
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="tf-title">Title</label>
+        <input hlmInput id="tf-title" formControlName="title" maxlength="200" />
+        @if (form.controls.title.touched && form.controls.title.hasError('required')) {
+          <p class="text-xs text-destructive">Title is required.</p>
+        } @else if (form.controls.title.touched && form.controls.title.hasError('maxlength')) {
+          <p class="text-xs text-destructive">Title must be 200 characters or fewer.</p>
+        } @else if (form.controls.title.hasError('server')) {
+          <p class="text-xs text-destructive">{{ form.controls.title.getError('server') }}</p>
         }
-      </mat-select>
-      @if (form.controls.assigneeId.hasError('server')) {
-        <mat-error>{{ form.controls.assigneeId.getError('server') }}</mat-error>
-      }
-    </mat-form-field>
-  </mat-dialog-content>
+      </div>
 
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" [mat-dialog-close]="undefined">Cancel</button>
-    <button mat-flat-button type="submit" [disabled]="submitting()">
-      {{ submitting() ? 'Saving…' : isEdit ? 'Save changes' : 'Create task' }}
-    </button>
-  </mat-dialog-actions>
-</form>
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="tf-description">Description</label>
+        <textarea hlmTextarea id="tf-description" formControlName="description" rows="3"></textarea>
+        @if (form.controls.description.hasError('server')) {
+          <p class="text-xs text-destructive">
+            {{ form.controls.description.getError('server') }}
+          </p>
+        }
+      </div>
+
+      @if (isEdit) {
+        <div class="flex flex-col gap-1.5">
+          <label hlmLabel for="tf-status">Status</label>
+          <select class="tf-select" id="tf-status" formControlName="status">
+            <option value="TODO">To do</option>
+            <option value="IN_PROGRESS">In progress</option>
+            <option value="DONE">Done</option>
+          </select>
+        </div>
+      }
+
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="tf-priority">Priority</label>
+        <select class="tf-select" id="tf-priority" formControlName="priority">
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="tf-due">Due date</label>
+        <input hlmInput type="date" id="tf-due" formControlName="dueDate" />
+        @if (form.controls.dueDate.hasError('server')) {
+          <p class="text-xs text-destructive">{{ form.controls.dueDate.getError('server') }}</p>
+        }
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="tf-assignee">Assignee</label>
+        <select class="tf-select" id="tf-assignee" formControlName="assigneeId">
+          <option [ngValue]="null">Unassigned</option>
+          @for (member of members; track member.userId) {
+            <option [ngValue]="member.userId">{{ member.displayName }}</option>
+          }
+        </select>
+        @if (form.controls.assigneeId.hasError('server')) {
+          <p class="text-xs text-destructive">{{ form.controls.assigneeId.getError('server') }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="flex shrink-0 justify-end gap-2 border-t border-border px-6 py-4">
+      <button hlmBtn variant="ghost" type="button" (click)="cancel()">Cancel</button>
+      <button hlmBtn type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Saving…' : isEdit ? 'Save changes' : 'Create task' }}
+      </button>
+    </div>
+  </form>
+</div>

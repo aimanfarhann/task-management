@@ -142,6 +142,13 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+
+  /* Consistent iris focus ring on custom interactive elements that don't carry
+     their own (helm components style their own focus states). */
+  :where(a, button):focus-visible {
+    outline: 2px solid var(--tf-ring);
+    outline-offset: 2px;
+  }
 }
 
 /* Shared Focus utility classes (used directly in templates). --------------- */
@@ -226,6 +233,54 @@
   .tf-overlay-backdrop {
     background-color: rgba(6, 7, 10, 0.55);
     backdrop-filter: blur(2px);
+  }
+
+  /* Native <select> styled to match hlmInput — reliable, with native option-list
+     a11y. Chevron is an inline Lucide glyph in a theme-neutral gray. */
+  .tf-select {
+    height: 2.25rem;
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--input);
+    background-color: transparent;
+    padding: 0.25rem 2rem 0.25rem 0.625rem;
+    font-size: 0.875rem;
+    color: var(--foreground);
+    box-shadow: var(--tf-shadow-1);
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b8f9a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    background-size: 1rem;
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  :root.dark .tf-select {
+    background-color: color-mix(in srgb, var(--input) 30%, transparent);
+  }
+
+  .tf-select:focus-visible {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 45%, transparent);
+  }
+
+  /* Non-interactive badge (e.g. "Archived"): icon + text so color is never the
+     only signal (DESIGN §8). Hairline pill. */
+  .tf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--tf-hairline);
+    background-color: var(--accent);
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
   }
 }
 

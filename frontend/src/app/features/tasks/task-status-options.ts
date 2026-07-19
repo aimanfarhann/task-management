@@ -9,7 +9,7 @@ export interface TaskStatusOption {
 
 /** The three statuses in board order, shared by the card and list move menus. */
 export const TASK_STATUS_OPTIONS: TaskStatusOption[] = [
-  { status: 'TODO', label: 'To do', icon: 'radio_button_unchecked' },
-  { status: 'IN_PROGRESS', label: 'In progress', icon: 'timelapse' },
-  { status: 'DONE', label: 'Done', icon: 'check_circle' },
+  { status: 'TODO', label: 'To do', icon: 'lucideCircle' },
+  { status: 'IN_PROGRESS', label: 'In progress', icon: 'lucideLoaderCircle' },
+  { status: 'DONE', label: 'Done', icon: 'lucideCircleCheck' },
 ];

@@ -2,14 +2,20 @@
   <header class="page-header">
     <h1 class="page-header__title">Projects</h1>
     <div class="page-header__actions">
-      <mat-slide-toggle
-        [checked]="projectStore.showArchived()"
-        (change)="toggleShowArchived($event.checked)"
-      >
-        Show archived
-      </mat-slide-toggle>
-      <button mat-flat-button type="button" (click)="openCreateDialog()">
-        <mat-icon aria-hidden="true">add</mat-icon>
+      <label class="tf-switch">
+        <input
+          type="checkbox"
+          class="sr-only"
+          [checked]="projectStore.showArchived()"
+          (change)="toggleShowArchived($any($event.target).checked)"
+        />
+        <span class="tf-switch__track" aria-hidden="true">
+          <span class="tf-switch__thumb"></span>
+        </span>
+        <span class="tf-switch__label">Show archived</span>
+      </label>
+      <button hlmBtn type="button" (click)="openCreateDialog()">
+        <ng-icon name="lucidePlus" size="1rem" aria-hidden="true" />
         New project
       </button>
     </div>
@@ -23,14 +29,14 @@
     </div>
   } @else if (projectStore.projectsError(); as errorMessage) {
     <tf-empty-state
-      icon="error_outline"
+      icon="lucideCircleAlert"
       [message]="errorMessage"
       actionLabel="Retry"
       (action)="reload()"
     />
   } @else if (projectStore.visibleProjects().length === 0) {
     <tf-empty-state
-      icon="folder_open"
+      icon="lucideFolderOpen"
       [message]="
         projectStore.projects().length === 0
           ? 'No projects yet. Create your first project.'
@@ -44,13 +50,13 @@
       @for (project of projectStore.visibleProjects(); track project.id) {
         <li class="projects-grid__item">
           <a class="project-card-link" [routerLink]="[project.id]">
-            <mat-card class="project-card">
+            <div class="project-card">
               <div class="project-card__header">
                 <tf-color-dot [colorTag]="project.colorTag" />
                 <span class="project-card__name">{{ project.name }}</span>
                 @if (project.archived) {
                   <span class="tf-badge">
-                    <mat-icon aria-hidden="true">inventory_2</mat-icon>
+                    <ng-icon name="lucideArchive" size="0.9375rem" aria-hidden="true" />
                     Archived
                   </span>
                 }
@@ -60,13 +66,13 @@
               }
               <div class="project-card__meta">
                 <span class="project-card__members">
-                  <mat-icon class="tf-icon-sm" aria-hidden="true">group</mat-icon>
+                  <ng-icon name="lucideUsers" size="1.125rem" aria-hidden="true" />
                   {{ project.memberCount }}
                   {{ project.memberCount === 1 ? 'member' : 'members' }}
                 </span>
                 <span>Created {{ project.createdAt | date: 'mediumDate' }}</span>
               </div>
-            </mat-card>
+            </div>
           </a>
         </li>
       }

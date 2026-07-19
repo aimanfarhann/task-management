@@ -2,16 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 360px;
-  padding-top: 8px;
 }
 
 // Title in the display voice (DESIGN §3).
 .task-detail__title {
   margin-right: 24px;
-  font-family: var(--tf-font-display);
-  font-weight: 600;
-  letter-spacing: -0.015em;
 }
 
 .task-detail__badges {
@@ -25,8 +20,9 @@
   margin: 0;
   max-width: 72ch;
   white-space: pre-wrap;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-medium);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.5rem;
 }
 
 // Facts sit in a hairline surface; labels are mono eyebrows, values calm.
@@ -36,32 +32,33 @@
   gap: 20px 24px;
   margin: 0;
   padding: 16px;
-  background-color: var(--mat-sys-surface-container-low);
+  background-color: var(--card);
   border: 1px solid var(--tf-hairline);
-  border-radius: var(--mat-sys-corner-large);
+  border-radius: 14px;
 }
 
 .task-detail__fact dt {
-  font-family: var(--tf-font-mono);
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
 }
 
 .task-detail__fact dd {
   margin: 6px 0 0;
-  font: var(--mat-sys-body-medium);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 // Dates speak in the mono metadata voice (Due date, Created).
 .task-detail__fact:nth-child(2) dd,
 .task-detail__fact:nth-child(4) dd {
-  font-family: var(--tf-font-mono);
+  font-family: var(--font-mono);
   font-feature-settings: 'tnum' 1;
   letter-spacing: -0.01em;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
 }
 
 .task-detail__overdue {
@@ -72,11 +69,11 @@
 .task-detail__error {
   margin: 0;
   padding: 12px 14px;
-  border-radius: var(--mat-sys-corner-medium);
-  border: 1px solid color-mix(in srgb, var(--mat-sys-error) 40%, transparent);
-  background-color: var(--mat-sys-error-container);
-  color: var(--mat-sys-on-error-container);
-  font: var(--mat-sys-body-small);
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--destructive) 40%, transparent);
+  background-color: color-mix(in srgb, var(--destructive) 12%, transparent);
+  color: var(--destructive);
+  font-size: 0.8125rem;
 }
 
 .comments {
@@ -89,8 +86,8 @@
 
 .comments__heading {
   margin: 0;
-  font: var(--mat-sys-title-medium);
-  font-family: var(--tf-font-display);
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.015em;
 }
@@ -116,9 +113,9 @@
   flex-direction: column;
   gap: 6px;
   padding: 12px 14px;
-  background-color: var(--mat-sys-surface-container-low);
+  background-color: var(--card);
   border: 1px solid var(--tf-hairline);
-  border-radius: var(--mat-sys-corner-medium);
+  border-radius: 10px;
 }
 
 .comment__header {
@@ -128,17 +125,17 @@
 }
 
 .comment__author {
-  font: var(--mat-sys-label-large);
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
 // Timestamp in the mono metadata voice.
 .comment__time {
-  font: var(--mat-sys-body-small);
-  font-family: var(--tf-font-mono);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-feature-settings: 'tnum' 1;
   letter-spacing: -0.01em;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
 }
 
 .comment__delete {
@@ -149,17 +146,21 @@
   margin: 0;
   max-width: 72ch;
   white-space: pre-wrap;
-  font: var(--mat-sys-body-medium);
+  font-size: 0.875rem;
+  line-height: 1.5rem;
 }
 
 .comment-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-end;
   padding-top: 4px;
 }
 
 .comment-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 100%;
 }

@@ -1,8 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
+import { NgIcon } from '@ng-icons/core';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TaskDto, TaskStatus } from '../../core/api/models';
 import { DueDatePipe } from '../../shared/due-date.pipe';
 import { isPastDue } from '../../shared/due-date.util';
@@ -17,10 +16,11 @@ import { TASK_STATUS_OPTIONS } from './task-status-options';
 @Component({
   selector: 'tf-task-card',
   imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatTooltipModule,
+    CdkMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+    NgIcon,
+    HlmButton,
     DueDatePipe,
     PriorityBadgeComponent,
   ],
