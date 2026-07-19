@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { toast } from 'ngx-sonner';
+import { toast } from '@spartan-ng/brain/sonner';
 
 /**
  * Success feedback per DESIGN.md §7: a transient toast, one at a time. Form
