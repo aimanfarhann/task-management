@@ -14,16 +14,17 @@
   z-index: 10;
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: var(--mat-sys-primary);
-  color: var(--mat-sys-on-primary);
-  font: var(--mat-sys-label-large);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
   text-decoration: none;
   transition: top 100ms ease;
 }
 
 .shell__skip-link:focus-visible {
   top: 8px;
-  outline: 2px solid var(--mat-sys-on-primary);
+  outline: 2px solid var(--primary-foreground);
   outline-offset: 2px;
 }
 
@@ -35,11 +36,14 @@
 
 .shell__toolbar {
   // App bar sits flush on the canvas with a hairline underline (elevation 0).
-  height: 60px;
-  border-bottom: 1px solid var(--tf-hairline);
-  background-color: color-mix(in srgb, var(--mat-sys-surface) 82%, transparent);
-  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
   gap: 4px;
+  height: 60px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--tf-hairline);
+  background-color: color-mix(in srgb, var(--background) 82%, transparent);
+  backdrop-filter: blur(8px);
   flex-shrink: 0;
 }
 
@@ -50,7 +54,7 @@
   gap: 10px;
   padding: 4px 6px;
   border-radius: 8px;
-  color: var(--mat-sys-on-surface);
+  color: var(--foreground);
   text-decoration: none;
 }
 
@@ -59,7 +63,7 @@
   height: 22px;
   flex-shrink: 0;
   border-radius: 7px;
-  background: linear-gradient(150deg, var(--mat-sys-primary), #b6bcff);
+  background: linear-gradient(150deg, var(--primary), #b6bcff);
   box-shadow: 0 0 0 1px rgba(139, 147, 255, 0.35);
   position: relative;
 }
@@ -72,7 +76,7 @@
   left: 5px;
   height: 2.5px;
   border-radius: 2px;
-  background-color: var(--mat-sys-on-primary);
+  background-color: var(--primary-foreground);
 }
 
 .shell__mark::before {
@@ -96,7 +100,8 @@
 }
 
 .shell__user-button {
-  color: var(--mat-sys-on-surface-variant);
+  gap: 8px;
+  color: var(--muted-foreground);
 }
 
 .shell__user-name {
@@ -132,28 +137,23 @@
   padding: 10px 4px;
   min-height: 58px;
   border-radius: 10px;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-label-medium);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
   text-decoration: none;
   transition:
     background-color 120ms ease,
     color 120ms ease;
-
-  mat-icon {
-    font-size: 22px;
-    width: 22px;
-    height: 22px;
-  }
 }
 
 .shell__nav-link:hover {
-  color: var(--mat-sys-on-surface);
-  background-color: var(--mat-sys-surface-container-high);
+  color: var(--foreground);
+  background-color: var(--accent);
 }
 
 // Active: iris text + a soft iris-tinted field + a left accent bar.
 .shell__nav-link--active {
-  color: var(--mat-sys-primary);
+  color: var(--primary);
   background-color: var(--tf-accent-soft);
 }
 
@@ -166,7 +166,7 @@
   width: 3px;
   height: 24px;
   border-radius: 0 3px 3px 0;
-  background-color: var(--mat-sys-primary);
+  background-color: var(--primary);
 }
 
 .shell__wordmark:focus-visible,

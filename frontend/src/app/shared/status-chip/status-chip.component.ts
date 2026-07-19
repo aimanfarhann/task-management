@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { NgIcon } from '@ng-icons/core';
 
 interface StatusMeta {
   label: string;
@@ -8,12 +8,12 @@ interface StatusMeta {
 }
 
 const STATUS_META: Record<string, StatusMeta> = {
-  TODO: { label: 'To do', icon: 'radio_button_unchecked', modifier: 'todo' },
-  IN_PROGRESS: { label: 'In progress', icon: 'timelapse', modifier: 'in-progress' },
-  DONE: { label: 'Done', icon: 'check_circle', modifier: 'done' },
+  TODO: { label: 'To do', icon: 'lucideCircle', modifier: 'todo' },
+  IN_PROGRESS: { label: 'In progress', icon: 'lucideLoaderCircle', modifier: 'in-progress' },
+  DONE: { label: 'Done', icon: 'lucideCircleCheck', modifier: 'done' },
 };
 
-const UNKNOWN_STATUS: StatusMeta = { label: 'Unknown', icon: 'help', modifier: 'todo' };
+const UNKNOWN_STATUS: StatusMeta = { label: 'Unknown', icon: 'lucideCircleHelp', modifier: 'todo' };
 
 /**
  * Status chip (DESIGN.md §2/§8): icon + text label, colored via the
@@ -22,11 +22,11 @@ const UNKNOWN_STATUS: StatusMeta = { label: 'Unknown', icon: 'help', modifier: '
  */
 @Component({
   selector: 'tf-status-chip',
-  imports: [MatIconModule],
+  imports: [NgIcon],
   template: `
     <span class="status-chip" [class]="'status-chip--' + meta().modifier">
-      <mat-icon class="status-chip__icon" aria-hidden="true">{{ meta().icon }}</mat-icon>
-      <span class="cdk-visually-hidden">Status:</span>
+      <ng-icon [name]="meta().icon" size="1.0625rem" aria-hidden="true" />
+      <span class="sr-only">Status:</span>
       <span class="status-chip__label">{{ meta().label }}</span>
     </span>
   `,
@@ -36,18 +36,13 @@ const UNKNOWN_STATUS: StatusMeta = { label: 'Unknown', icon: 'help', modifier: '
       align-items: center;
       gap: 5px;
       padding: 3px 10px 3px 7px;
-      border-radius: var(--mat-sys-corner-small);
+      border-radius: 6px;
       border: 1px solid transparent;
-      font: var(--mat-sys-label-medium);
+      font-size: 0.75rem;
+      line-height: 1rem;
       font-weight: 600;
       letter-spacing: -0.005em;
       white-space: nowrap;
-    }
-
-    .status-chip__icon {
-      font-size: 17px;
-      width: 17px;
-      height: 17px;
     }
 
     /* Tonal fill + same-hue hairline so each status reads by color AND shape,

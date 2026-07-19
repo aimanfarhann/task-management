@@ -1,16 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
+import { NgIcon } from '@ng-icons/core';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmToaster } from '@spartan-ng/helm/sonner';
 import { AuthStore } from '../auth/auth.store';
 import { ThemeStore } from './theme.store';
 
 /**
  * App layout shell (DESIGN.md §4): top app bar plus a navigation rail on
  * desktop that becomes a bottom navigation bar under 600px. Only the content
- * area scrolls.
+ * area scrolls. Hosts the single sonner toaster for the whole app.
  */
 @Component({
   selector: 'tf-shell',
@@ -18,10 +18,12 @@ import { ThemeStore } from './theme.store';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
+    CdkMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+    NgIcon,
+    HlmButton,
+    HlmToaster,
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',

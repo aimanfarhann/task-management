@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 export interface ConfirmDialogData {
   title: string;
@@ -10,55 +10,38 @@ export interface ConfirmDialogData {
 }
 
 /**
- * Confirmation dialog for destructive actions (DESIGN.md §7). Closes with
- * `true` when confirmed, `false`/`undefined` otherwise.
+ * Confirmation dialog for destructive actions (DESIGN.md §7). Rendered in the
+ * CDK overlay; closes with `true` when confirmed, `false`/`undefined` otherwise.
+ * Opened through {@link ConfirmationService} so the overlay config lives once.
  */
 @Component({
   selector: 'tf-confirm-dialog',
-  imports: [MatButtonModule, MatDialogModule],
+  imports: [HlmButton],
   template: `
-    <h2 mat-dialog-title>{{ data.title }}</h2>
-    <mat-dialog-content>
-      <p id="tf-confirm-message" class="confirm-dialog__message">{{ data.message }}</p>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button type="button" [mat-dialog-close]="false">Cancel</button>
-      <button
-        mat-flat-button
-        type="button"
-        [mat-dialog-close]="true"
-        [class.confirm-dialog__confirm--destructive]="data.destructive"
-      >
-        {{ data.confirmLabel }}
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: `
-    .mat-mdc-dialog-title {
-      /* Title in the display voice (DESIGN.md §3). */
-      font-family: var(--tf-font-display);
-      font-weight: 600;
-      letter-spacing: -0.015em;
-    }
-
-    .confirm-dialog__message {
-      margin: 0;
-      max-width: 72ch;
-      color: var(--mat-sys-on-surface-variant);
-      font: var(--mat-sys-body-medium);
-    }
-
-    .confirm-dialog__confirm--destructive {
-      // Destructive confirm uses the error role colors (DESIGN.md §2).
-      --mdc-filled-button-container-color: var(--mat-sys-error);
-      --mdc-filled-button-label-text-color: var(--mat-sys-on-error);
-      --mat-filled-button-container-color: var(--mat-sys-error);
-      --mat-filled-button-label-text-color: var(--mat-sys-on-error);
-      --mat-button-filled-container-color: var(--mat-sys-error);
-      --mat-button-filled-label-text-color: var(--mat-sys-on-error);
-    }
+    <div class="tf-dialog w-[26rem] max-w-[calc(100vw-2rem)] p-6">
+      <h2 id="tf-confirm-title" class="tf-display text-lg">{{ data.title }}</h2>
+      <p id="tf-confirm-message" class="mt-2 max-w-[72ch] text-sm text-muted-foreground">
+        {{ data.message }}
+      </p>
+      <div class="mt-6 flex justify-end gap-2">
+        <button hlmBtn variant="ghost" type="button" (click)="close(false)">Cancel</button>
+        <button
+          hlmBtn
+          [variant]="data.destructive ? 'destructive' : 'default'"
+          type="button"
+          (click)="close(true)"
+        >
+          {{ data.confirmLabel }}
+        </button>
+      </div>
+    </div>
   `,
 })
 export class ConfirmDialogComponent {
-  protected readonly data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+  protected readonly data = inject<ConfirmDialogData>(DIALOG_DATA);
+  private readonly dialogRef = inject<DialogRef<boolean>>(DialogRef);
+
+  protected close(result: boolean): void {
+    this.dialogRef.close(result);
+  }
 }

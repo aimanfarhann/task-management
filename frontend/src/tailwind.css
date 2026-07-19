@@ -171,6 +171,71 @@
     text-transform: uppercase;
     color: var(--muted-foreground);
   }
+
+  /* Panels rendered in the CDK overlay (dialogs, menus) live at the document
+     root, so they can't rely on component-scoped styles — these are global. */
+  .tf-dialog {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background-color: var(--card);
+    color: var(--card-foreground);
+    box-shadow: var(--tf-shadow-2);
+    animation: tf-overlay-in 160ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .tf-menu {
+    min-width: 11rem;
+    padding: 4px;
+    border-radius: calc(var(--radius) + 2px);
+    border: 1px solid var(--border);
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: var(--tf-shadow-2);
+    animation: tf-overlay-in 120ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .tf-menu-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: calc(var(--radius) - 2px);
+    background: transparent;
+    color: var(--popover-foreground);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .tf-menu-item:hover,
+  .tf-menu-item:focus-visible {
+    background-color: var(--accent);
+    outline: none;
+  }
+
+  .tf-menu-item--danger {
+    color: var(--destructive);
+  }
+
+  .tf-overlay-backdrop {
+    background-color: rgba(6, 7, 10, 0.55);
+    backdrop-filter: blur(2px);
+  }
+}
+
+@keyframes tf-overlay-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes tf-page-enter {

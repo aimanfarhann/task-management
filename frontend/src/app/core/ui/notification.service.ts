@@ -1,24 +1,21 @@
-import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Injectable } from '@angular/core';
+import { toast } from 'ngx-sonner';
 
 /**
- * Success feedback per DESIGN.md §7: snackbar, 3 s, bottom center, one at a
- * time (MatSnackBar dismisses any open snackbar before showing the next).
- * Form validation failures stay inline next to their source; only transient
+ * Success feedback per DESIGN.md §7: a transient toast, one at a time. Form
+ * validation failures stay inline next to their source; only transient
  * whole-action failures with no inline home — a failed optimistic board
- * drag-drop that has already rolled back — surface as an error snackbar.
+ * drag-drop that has already rolled back — surface as an error toast.
+ * Rendered by the single <hlm-toaster> in the app shell (sonner manages its own
+ * polite/assertive live region for screen-reader announcements, DESIGN §8).
  */
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private readonly snackBar = inject(MatSnackBar);
-
   success(message: string): void {
-    // Non-interrupting live-region announcement (role=status) for success (DESIGN §8).
-    this.snackBar.open(message, undefined, { duration: 3000, politeness: 'polite' });
+    toast.success(message, { duration: 3000 });
   }
 
   error(message: string): void {
-    // Interrupting live-region announcement (role=alert) so failures are heard (DESIGN §8).
-    this.snackBar.open(message, 'Dismiss', { duration: 5000, politeness: 'assertive' });
+    toast.error(message, { duration: 5000 });
   }
 }

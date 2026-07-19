@@ -1,34 +1,46 @@
 <div class="shell">
   <a class="shell__skip-link" href="#main-content">Skip to content</a>
-  <mat-toolbar class="shell__toolbar">
+  <header class="shell__toolbar">
     <a routerLink="/dashboard" class="shell__wordmark" aria-label="TaskFlow — dashboard">
       <span class="shell__mark" aria-hidden="true"></span>
       <span class="shell__wordmark-text tf-display">TaskFlow</span>
     </a>
     <span class="shell__spacer"></span>
     <button
-      mat-icon-button
+      hlmBtn
+      variant="ghost"
+      size="icon"
       type="button"
       (click)="themeStore.toggleTheme()"
       [attr.aria-label]="
         themeStore.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
       "
     >
-      <mat-icon aria-hidden="true">
-        {{ themeStore.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}
-      </mat-icon>
+      <ng-icon
+        [name]="themeStore.theme() === 'dark' ? 'lucideSun' : 'lucideMoon'"
+        size="1.15rem"
+        aria-hidden="true"
+      />
     </button>
-    <button mat-button type="button" class="shell__user-button" [matMenuTriggerFor]="userMenu">
-      <mat-icon aria-hidden="true">account_circle</mat-icon>
+    <button
+      hlmBtn
+      variant="ghost"
+      type="button"
+      class="shell__user-button"
+      [cdkMenuTriggerFor]="userMenu"
+    >
+      <ng-icon name="lucideCircleUserRound" size="1.15rem" aria-hidden="true" />
       <span class="shell__user-name">{{ authStore.currentUser()?.displayName }}</span>
     </button>
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item type="button" (click)="signOut()">
-        <mat-icon aria-hidden="true">logout</mat-icon>
-        <span>Sign out</span>
-      </button>
-    </mat-menu>
-  </mat-toolbar>
+    <ng-template #userMenu>
+      <div class="tf-menu" cdkMenu>
+        <button class="tf-menu-item" type="button" cdkMenuItem (cdkMenuItemTriggered)="signOut()">
+          <ng-icon name="lucideLogOut" size="1rem" aria-hidden="true" />
+          <span>Sign out</span>
+        </button>
+      </div>
+    </ng-template>
+  </header>
 
   <div class="shell__body">
     <nav class="shell__nav" aria-label="Primary">
@@ -38,7 +50,7 @@
         routerLinkActive="shell__nav-link--active"
         ariaCurrentWhenActive="page"
       >
-        <mat-icon aria-hidden="true">dashboard</mat-icon>
+        <ng-icon name="lucideLayoutDashboard" size="1.375rem" aria-hidden="true" />
         <span class="shell__nav-label">Dashboard</span>
       </a>
       <a
@@ -47,7 +59,7 @@
         routerLinkActive="shell__nav-link--active"
         ariaCurrentWhenActive="page"
       >
-        <mat-icon aria-hidden="true">folder</mat-icon>
+        <ng-icon name="lucideFolder" size="1.375rem" aria-hidden="true" />
         <span class="shell__nav-label">Projects</span>
       </a>
       @if (authStore.currentUser()?.role === 'ADMIN') {
@@ -57,7 +69,7 @@
           routerLinkActive="shell__nav-link--active"
           ariaCurrentWhenActive="page"
         >
-          <mat-icon aria-hidden="true">admin_panel_settings</mat-icon>
+          <ng-icon name="lucideShieldCheck" size="1.375rem" aria-hidden="true" />
           <span class="shell__nav-label">Admin</span>
         </a>
       }
@@ -67,3 +79,5 @@
     </main>
   </div>
 </div>
+
+<hlm-toaster [theme]="themeStore.theme()" position="bottom-center" />
