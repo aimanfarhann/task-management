@@ -2,7 +2,7 @@
 
 A lightweight task and project management web application. Teams create projects, add members, and track tasks through a simple workflow.
 
-**Stack:** Spring Boot 3 (Java 21) REST API · Angular 22 + Angular Material SPA · PostgreSQL 16
+**Stack:** Spring Boot 3 (Java 21) REST API · Angular 22 SPA (Tailwind CSS v4 + spartan-ng) · PostgreSQL 16
 
 ---
 

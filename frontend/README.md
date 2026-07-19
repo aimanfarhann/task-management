@@ -1,6 +1,6 @@
 # TaskFlow — Frontend
 
-Angular 22 + Angular Material SPA for TaskFlow (M1: auth, projects, member management).
+Angular 22 SPA for TaskFlow, built with Tailwind CSS v4 + spartan-ng (headless components on Angular CDK) and Lucide icons.
 See `../context/` for the binding PRD, DESIGN, ARCHITECTURE, SCHEMA, and RULES documents.
 
 ## Commands
@@ -27,20 +27,26 @@ typed API clients live in `core/api/`.
 
 ## Theming
 
-Material 3 theme generated from seed `#4355B9` (`mat.define-theme` with
-`use-system-variables`); palettes in `src/theme/_theme-colors.scss` come from
-`ng generate @angular/material:theme-color`. Light/dark schemes: default follows
-`prefers-color-scheme`, manual toggle persisted in `localStorage`
-(`core/layout/theme.store.ts` toggles `.tf-dark` on `<html>`). Semantic
-status/priority colors and the 8 project colorTag hues are CSS custom
-properties in `src/styles.scss` with dark variants.
+The "Focus" theme lives in `src/tailwind.css`: Tailwind v4 (CSS-first, processed
+natively by the Angular build — no PostCSS config) plus the shadcn design tokens
+(`--background`, `--foreground`, `--primary`, `--card`, `--border`, `--radius`, …)
+and our `--tf-*` semantic tokens (status/priority + the 8 project colorTag hues).
+Dark-first: `core/layout/theme.store.ts` toggles `.dark` on `<html>` (light is the
+token default); the choice is persisted in `localStorage` and applied pre-boot by a
+small script in `index.html` to avoid a flash. spartan-ng "helm" components are
+vendored under `src/app/ui/` (shadcn model — generated into the repo) and styled
+with these tokens.
 
 ## Third-party dependencies (RULES.md §27)
 
-- `@fontsource/roboto` — self-hosts Roboto per DESIGN.md §3 (no CDN); bundled via
-  the angular.json `styles` array.
-- `material-icons` — self-hosts the Material Icons ligature font `<mat-icon>` uses
-  by default, replacing the Google Fonts CDN link that `ng add @angular/material` inserts.
+- `@fontsource-variable/{inter,space-grotesk,jetbrains-mono}` — self-host the body,
+  display, and mono faces per DESIGN.md §3 (no CDN); bundled via the angular.json `styles` array.
+- `@spartan-ng/brain` + `@spartan-ng/cli` — headless CDK-based primitives and the
+  generator for the helm components in `src/app/ui/`.
+- `@ng-icons/core` + `@ng-icons/lucide` — Lucide icon set; the app's icons are
+  registered once in `shared/icons.ts` and provided at the app root.
+- `ngx-sonner` — the toast library behind the single `<hlm-toaster>` in the shell.
+- `clsx` / `tailwind-merge` / `class-variance-authority` / `tw-animate-css` — utilities the helm components depend on.
 - `eslint-config-prettier` — keeps ESLint from fighting Prettier formatting.
 
 ## Testing notes

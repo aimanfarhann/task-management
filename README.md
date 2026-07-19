@@ -1,13 +1,13 @@
 # TaskFlow
 
-Lightweight task and project management. Spring Boot 3 (Java 21) REST API + Angular / Angular Material SPA + PostgreSQL 16.
+Lightweight task and project management. Spring Boot 3 (Java 21) REST API + Angular 22 SPA (Tailwind CSS v4 + spartan-ng) + PostgreSQL 16.
 
 Project documentation lives in [context/](context/) — read [RULES.md](context/RULES.md) before contributing:
 
 | Doc | Purpose |
 |---|---|
 | [PRD.md](context/PRD.md) | Scope, MVP, success metrics |
-| [DESIGN.md](context/DESIGN.md) | Visual identity, Material 3 usage, accessibility |
+| [DESIGN.md](context/DESIGN.md) | Visual identity, Tailwind + spartan-ng usage, accessibility |
 | [ARCHITECTURE.md](context/ARCHITECTURE.md) | System design, layering, folder structure |
 | [SCHEMA.md](context/SCHEMA.md) | Database schema, migrations, access control |
 | [RULES.md](context/RULES.md) | Hard rules for contributors and AI agents |

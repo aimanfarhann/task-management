@@ -8,7 +8,7 @@ Top-level architecture, system design, data flow, and folder structure. This doc
 
 ```mermaid
 flowchart LR
-    Browser["Angular SPA\n(Angular 22 + Material)"]
+    Browser["Angular SPA\n(Angular 22 · Tailwind + spartan-ng)"]
     API["Spring Boot 3 REST API\n(Java 21, stateless)"]
     DB[("PostgreSQL 16")]
 
@@ -138,7 +138,7 @@ Rules: `features` may import from `core` and `shared`; `shared` imports from nei
 
 - **Signals, no NgRx.** Scale of the app does not justify a store library.
 - Server state lives in lightweight signal stores per feature (`TaskStore`), holding `data / loading / error` signals and exposing computed views (e.g. tasks grouped by status).
-- Optimistic updates for status changes and drag-drop; rollback + snackbar on API failure.
+- Optimistic updates for status changes and drag-drop; rollback + error toast on API failure.
 - Auth state (`currentUser`, token) in `AuthStore`; token persisted in `localStorage`, refresh handled by the interceptor on 401.
 
 ### 4.3 Data flow
