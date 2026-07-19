@@ -9,11 +9,11 @@
 .page-header__title {
   margin: 0;
   // Display face, page-title scale — the one hero moment on the screen.
-  font-family: var(--tf-font-display);
+  font-family: var(--font-display);
   font-size: 30px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--mat-sys-on-surface);
+  color: var(--foreground);
 }
 
 .dashboard__skeleton {
@@ -32,11 +32,11 @@
 
 .dashboard-section__title {
   margin: 0 0 20px;
-  font-family: var(--tf-font-display);
+  font-family: var(--font-display);
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.015em;
-  color: var(--mat-sys-on-surface);
+  color: var(--foreground);
 }
 
 .due-group {
@@ -68,9 +68,9 @@
   min-width: 22px;
   padding: 1px 7px;
   border: 1px solid var(--tf-hairline);
-  border-radius: var(--mat-sys-corner-small);
-  background-color: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface-variant);
+  border-radius: 6px;
+  background-color: var(--secondary);
+  color: var(--muted-foreground);
   font-size: 11px;
   line-height: 18px;
   // Overdue tints its own count so the whole label reads at a glance.
@@ -100,8 +100,8 @@
   flex-wrap: wrap;
   gap: 16px;
   padding: 16px 18px;
-  border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface-container-low);
+  border-radius: 14px;
+  background-color: var(--card);
   border: 1px solid var(--tf-hairline);
   box-shadow: var(--tf-shadow-1);
   transition:
@@ -117,15 +117,15 @@
   bottom: 12px;
   width: 3px;
   border-radius: 0 3px 3px 0;
-  background-color: var(--mat-sys-primary);
+  background-color: var(--primary);
   opacity: 0;
   transition: opacity 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .my-task:hover,
 .my-task:focus-within {
-  background-color: var(--mat-sys-surface-container);
-  border-color: var(--mat-sys-outline);
+  background-color: var(--secondary);
+  border-color: var(--tf-border-strong);
 }
 
 .my-task:hover::before,
@@ -145,25 +145,28 @@
 .my-task__link:focus-visible {
   outline: 2px solid var(--tf-ring);
   outline-offset: 3px;
-  border-radius: var(--mat-sys-corner-extra-small);
+  border-radius: 4px;
 }
 
 .my-task__title {
-  font: var(--mat-sys-title-medium);
-  color: var(--mat-sys-on-surface);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  color: var(--foreground);
   transition: color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .my-task:hover .my-task__title {
-  color: var(--mat-sys-primary);
+  color: var(--primary);
 }
 
 .my-task__project {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-small);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .my-task__meta {
@@ -178,7 +181,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--mat-sys-on-surface-variant);
+  color: var(--muted-foreground);
   font-size: 12px;
   font-weight: 500;
 }
@@ -197,7 +200,7 @@
 .summary-card-link {
   display: block;
   height: 100%;
-  border-radius: var(--mat-sys-corner-large);
+  border-radius: 14px;
   text-decoration: none;
 }
 
@@ -212,6 +215,11 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--tf-hairline);
+  background-color: var(--card);
+  color: var(--card-foreground);
+  box-shadow: var(--tf-shadow-1);
   transition:
     background-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1),
     border-color 120ms cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -219,8 +227,8 @@
 
 .summary-card-link:hover .summary-card,
 .summary-card-link:focus-visible .summary-card {
-  background-color: var(--mat-sys-surface-container);
-  border-color: var(--mat-sys-outline);
+  background-color: var(--secondary);
+  border-color: var(--tf-border-strong);
 }
 
 .summary-card__header {
@@ -232,8 +240,10 @@
 }
 
 .summary-card__name {
-  font: var(--mat-sys-title-medium);
-  color: var(--mat-sys-on-surface);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  color: var(--foreground);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -264,7 +274,7 @@
   font-size: 22px;
   font-weight: 600;
   line-height: 1;
-  color: var(--mat-sys-on-surface);
+  color: var(--foreground);
 }
 
 @media (max-width: 599px) {

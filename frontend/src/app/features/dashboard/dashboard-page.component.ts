@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { NgIcon } from '@ng-icons/core';
 import { ColorDotComponent } from '../../shared/color-dot/color-dot.component';
 import { DueDatePipe } from '../../shared/due-date.pipe';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
@@ -19,8 +18,7 @@ import { DashboardStore } from './dashboard.store';
   selector: 'tf-dashboard-page',
   imports: [
     RouterLink,
-    MatCardModule,
-    MatIconModule,
+    NgIcon,
     ColorDotComponent,
     DueDatePipe,
     EmptyStateComponent,

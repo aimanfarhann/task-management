@@ -66,6 +66,7 @@
   --tf-tag-purple: #7e22ce;
 
   --tf-hairline: var(--border);
+  --tf-border-strong: color-mix(in srgb, var(--foreground) 18%, var(--border));
   --tf-ring: color-mix(in srgb, var(--ring) 55%, transparent);
   --tf-accent-soft: color-mix(in srgb, var(--primary) 10%, transparent);
   --tf-shadow-1: 0 1px 2px rgba(20, 22, 29, 0.08);
@@ -119,6 +120,7 @@
   --tf-tag-indigo: #8b93ff;
   --tf-tag-purple: #c48cff;
 
+  --tf-border-strong: color-mix(in srgb, var(--foreground) 18%, var(--border));
   --tf-ring: color-mix(in srgb, var(--ring) 55%, transparent);
   --tf-accent-soft: color-mix(in srgb, var(--primary) 12%, transparent);
   --tf-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);

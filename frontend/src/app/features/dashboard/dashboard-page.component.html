@@ -11,7 +11,7 @@
     </div>
   } @else if (dashboardStore.error(); as message) {
     <tf-empty-state
-      icon="error_outline"
+      icon="lucideCircleAlert"
       [message]="message"
       actionLabel="Retry"
       (action)="reload()"
@@ -22,7 +22,7 @@
 
       @if (dashboardStore.myTasks().length === 0) {
         <tf-empty-state
-          icon="task_alt"
+          icon="lucideListChecks"
           message="No tasks are assigned to you right now."
           actionLabel="Browse projects"
           (action)="goToProjects()"
@@ -52,7 +52,7 @@
                     <tf-priority-badge [priority]="task.priority" />
                     @if (task.dueDate) {
                       <span class="my-task__due tf-mono">
-                        <mat-icon class="tf-icon-sm" aria-hidden="true">event</mat-icon>
+                        <ng-icon name="lucideCalendar" size="0.875rem" aria-hidden="true" />
                         {{ task.dueDate | tfDueDate }}
                       </span>
                     }
@@ -70,7 +70,7 @@
 
       @if (dashboardStore.projectSummaries().length === 0) {
         <tf-empty-state
-          icon="folder_open"
+          icon="lucideFolderOpen"
           message="You are not a member of any project yet."
           actionLabel="Go to projects"
           (action)="goToProjects()"
@@ -80,7 +80,7 @@
           @for (summary of dashboardStore.projectSummaries(); track summary.projectId) {
             <li class="summary-grid__item">
               <a class="summary-card-link" [routerLink]="['/projects', summary.projectId]">
-                <mat-card class="summary-card">
+                <div class="summary-card">
                   <div class="summary-card__header">
                     <tf-color-dot [colorTag]="summary.colorTag" />
                     <span class="summary-card__name">{{ summary.projectName }}</span>
@@ -99,7 +99,7 @@
                       <dd class="tf-mono">{{ summary.doneCount }}</dd>
                     </div>
                   </dl>
-                </mat-card>
+                </div>
               </a>
             </li>
           }

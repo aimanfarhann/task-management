@@ -3,7 +3,7 @@ import { Component, input } from '@angular/core';
 /**
  * Skeleton placeholder block for initial page loads (DESIGN.md §7). A slow
  * shimmer signals "loading"; it is disabled under prefers-reduced-motion by the
- * global rule in styles.scss (DESIGN §6).
+ * global rule in tailwind.css (DESIGN §6).
  */
 @Component({
   selector: 'tf-skeleton',
@@ -15,12 +15,12 @@ import { Component, input } from '@angular/core';
   styles: `
     :host {
       display: block;
-      border-radius: var(--mat-sys-corner-medium);
+      border-radius: 10px;
       background: linear-gradient(
         100deg,
-        var(--mat-sys-surface-container) 30%,
-        var(--mat-sys-surface-container-high) 50%,
-        var(--mat-sys-surface-container) 70%
+        var(--muted) 30%,
+        var(--secondary) 50%,
+        var(--muted) 70%
       );
       background-size: 200% 100%;
       animation: tf-skeleton-shimmer 1.4s ease-in-out infinite;
